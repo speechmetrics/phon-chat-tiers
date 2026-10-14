@@ -7,7 +7,7 @@ the example files that implementations test against.
 | | |
 |---|---|
 | Specification | [spec/phon-chat-tiers.md](spec/phon-chat-tiers.md) |
-| Current version | 1.0 (draft; not yet tagged) |
+| Current version | 1.0 (draft; release candidate [v1.0-rc.1](https://github.com/speechmetrics/phon-chat-tiers/releases/tag/v1.0-rc.1)) |
 | Changelog | [Appendix B of the specification](spec/phon-chat-tiers.md#appendix-b-changelog) |
 | Examples | [examples/](examples/) — one zip per version on the [releases page](https://github.com/speechmetrics/phon-chat-tiers/releases) |
 | Change process | [CONTRIBUTING.md](CONTRIBUTING.md) |
