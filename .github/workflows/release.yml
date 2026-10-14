@@ -13,15 +13,24 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set version
         run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
 
       - name: Check the specification states this version
         run: |
-          grep -q "^\*\*Version:\*\* ${VERSION%-rc.*}" spec/phon-chat-tiers.md \
-            || { echo "spec/phon-chat-tiers.md does not state version ${VERSION%-rc.*}"; exit 1; }
+          base="${VERSION%-rc.*}"
+          re="^\*\*Version:\*\* ${base//./\\.}"
+          case "$VERSION" in
+            *-rc.*) re="$re( \(draft\))?\$" ;;
+            *)      re="$re\$" ;;
+          esac
+          grep -qE "$re" spec/phon-chat-tiers.md \
+            || { echo "spec/phon-chat-tiers.md does not state version $base exactly (a final tag needs the header without '(draft)')"; exit 1; }
+
+      - name: Check the example set is not empty
+        run: ls examples/valid/*.cha examples/invalid/*.cha >/dev/null
 
       - name: Build the example zip
         run: |
@@ -39,7 +48,7 @@ jobs:
           prerelease=""
           case "$VERSION" in *-rc.*) prerelease="--prerelease";; esac
           gh release create "$GITHUB_REF_NAME" $prerelease \
-            --title "Phon tiers in CHAT $VERSION" \
+            --title "Phon Tiers in CHAT $VERSION" \
             --notes "Specification and example files, version $VERSION. See Appendix B of the specification for the changes." \
             "dist/phon-chat-tiers-examples-$VERSION.zip" \
             "dist/phon-chat-tiers-$VERSION.md"
