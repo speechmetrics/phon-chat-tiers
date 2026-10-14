@@ -1,0 +1,11 @@
+@UTF8
+@Begin
+@Comment:	phon-conformance: invalid 3.8
+@Languages:	eng
+@Participants:	CHI Target_Child
+@ID:	eng|corpus|CHI|||||Target_Child|||
+@Media:	invalid-3-8-pause-inside-group, audio
+*CHI:	cat . 0_300
+%pho:	‹kæ (.) t›
+%phoint:	k 0_100 æ 100_200 t 200_300
+@End

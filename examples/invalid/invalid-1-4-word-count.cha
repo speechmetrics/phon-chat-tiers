@@ -1,0 +1,10 @@
+@UTF8
+@Begin
+@Comment:	phon-conformance: invalid 1.4
+@Languages:	eng
+@Participants:	CHI Target_Child
+@ID:	eng|corpus|CHI|||||Target_Child|||
+*CHI:	cat .
+%pho:	kæt
+%phosyl:	k:Oæ:Nt:C k:Oæ:Nt:C
+@End

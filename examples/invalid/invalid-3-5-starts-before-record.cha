@@ -1,0 +1,11 @@
+@UTF8
+@Begin
+@Comment:	phon-conformance: invalid 3.5
+@Languages:	eng
+@Participants:	CHI Target_Child
+@ID:	eng|corpus|CHI|||||Target_Child|||
+@Media:	invalid-3-5-starts-before-record, audio
+*CHI:	cat . 100_300
+%pho:	kæt
+%phoint:	k 98_150 æ 150_250 t 250_300
+@End
