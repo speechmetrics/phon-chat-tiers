@@ -1,0 +1,11 @@
+@UTF8
+@Begin
+@Comment:	phon-conformance: valid
+@Languages:	eng
+@Participants:	CHI Target_Child
+@ID:	eng|corpus|CHI|||||Target_Child|||
+@Media:	valid-phoint-one-ms-outside-record, audio
+*CHI:	cat . 100_300
+%pho:	kæt
+%phoint:	k 99_150 æ 150_250 t 250_301
+@End

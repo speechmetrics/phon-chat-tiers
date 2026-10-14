@@ -1,0 +1,13 @@
+@UTF8
+@Begin
+@Comment:	phon-conformance: valid
+@Languages:	eng
+@Participants:	CHI Target_Child
+@ID:	eng|corpus|CHI|||||Target_Child|||
+*CHI:	baba .
+%mod:	bʌ^bʌ
+%modsyl:	b:Oʌ:N^b:Oʌ:N
+%pho:	bʌ^bʌ
+%phosyl:	b:Oʌ:N^b:Oʌ:N
+%phoaln:	b↔b,ʌ↔ʌ,^↔^,b↔b,ʌ↔ʌ
+@End

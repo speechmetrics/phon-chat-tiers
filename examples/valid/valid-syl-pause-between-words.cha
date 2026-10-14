@@ -1,0 +1,13 @@
+@UTF8
+@Begin
+@Comment:	phon-conformance: valid
+@Languages:	eng
+@Participants:	CHI Target_Child
+@ID:	eng|corpus|CHI|||||Target_Child|||
+*CHI:	cat (.) dog .
+%mod:	kæt (.) dɔɡ
+%modsyl:	k:Oæ:Nt:C (.) d:Oɔ:Nɡ:C
+%pho:	kæt (.) dɔɡ
+%phosyl:	k:Oæ:Nt:C (.) d:Oɔ:Nɡ:C
+%phoaln:	k↔k,æ↔æ,t↔t (.)↔(.) d↔d,ɔ↔ɔ,ɡ↔ɡ
+@End

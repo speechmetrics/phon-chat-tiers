@@ -1,0 +1,11 @@
+@UTF8
+@Begin
+@Comment:	phon-conformance: valid
+@Languages:	eng
+@Participants:	CHI Target_Child
+@ID:	eng|corpus|CHI|||||Target_Child|||
+@Media:	valid-phoint-geminate, audio
+*CHI:	butter . 0_400
+%pho:	bʌtt
+%phoint:	b 0_100 ʌ 100_200 tt 200_400
+@End

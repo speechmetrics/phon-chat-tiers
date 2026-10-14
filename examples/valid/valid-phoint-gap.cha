@@ -1,0 +1,11 @@
+@UTF8
+@Begin
+@Comment:	phon-conformance: valid
+@Languages:	eng
+@Participants:	CHI Target_Child
+@ID:	eng|corpus|CHI|||||Target_Child|||
+@Media:	valid-phoint-gap, audio
+*CHI:	cat . 0_400
+%pho:	kæt
+%phoint:	k 0_100 æ 150_250 t 300_400
+@End

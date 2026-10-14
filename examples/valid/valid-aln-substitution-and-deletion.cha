@@ -1,0 +1,13 @@
+@UTF8
+@Begin
+@Comment:	phon-conformance: valid
+@Languages:	eng
+@Participants:	CHI Target_Child
+@ID:	eng|corpus|CHI|||||Target_Child|||
+*CHI:	the cat stood .
+%mod:	ðə kæt stʊd
+%modsyl:	ð:Oə:N k:Oæ:Nt:C s:Ot:Oʊ:Nd:C
+%pho:	də kæt tʊd
+%phosyl:	d:Oə:N k:Oæ:Nt:C t:Oʊ:Nd:C
+%phoaln:	ð↔d,ə↔ə k↔k,æ↔æ,t↔t s↔∅,t↔t,ʊ↔ʊ,d↔d
+@End

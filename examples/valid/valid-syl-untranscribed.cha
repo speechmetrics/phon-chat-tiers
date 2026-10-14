@@ -1,0 +1,14 @@
+@UTF8
+@Begin
+@Comment:	phon-conformance: valid
+@Comment:	D4: the untranscribed-word marker * is a timed element, so a %phoint for this utterance would end with a group holding * and one bullet; this file has no %phoint.
+@Languages:	eng
+@Participants:	CHI Target_Child
+@ID:	eng|corpus|CHI|||||Target_Child|||
+*CHI:	the xxx .
+%mod:	ðə *
+%modsyl:	ð:Oə:N *:U
+%pho:	də *
+%phosyl:	d:Oə:N *:U
+%phoaln:	ð↔d,ə↔ə ∅↔*,*↔∅
+@End

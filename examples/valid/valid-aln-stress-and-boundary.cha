@@ -1,0 +1,13 @@
+@UTF8
+@Begin
+@Comment:	phon-conformance: valid
+@Languages:	eng
+@Participants:	CHI Target_Child
+@ID:	eng|corpus|CHI|||||Target_Child|||
+*CHI:	record .
+%mod:	ˈɹɛkɔɹd
+%modsyl:	ˈɹ:Oɛ:Nk:Oɔ:Dɹ:Dd:C
+%pho:	ˈɹɛ.kɔɹd
+%phosyl:	ˈɹ:Oɛ:N.k:Oɔ:Dɹ:Dd:C
+%phoaln:	ˈ↔ˈ,ɹ↔ɹ,ɛ↔ɛ,∅↔.,k↔k,ɔ↔ɔ,ɹ↔ɹ,d↔d
+@End

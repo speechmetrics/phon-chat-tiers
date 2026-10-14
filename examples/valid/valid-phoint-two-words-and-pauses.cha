@@ -1,0 +1,11 @@
+@UTF8
+@Begin
+@Comment:	phon-conformance: valid
+@Languages:	eng
+@Participants:	CHI Target_Child
+@ID:	eng|corpus|CHI|||||Target_Child|||
+@Media:	valid-phoint-two-words-and-pauses, audio
+*CHI:	baba (.) cat . 0_1000
+%pho:	bʌ^bʌ (.) kæt
+%phoint:	b 0_100 ʌ 100_200 ^ 200_300 b 300_400 ʌ 400_500 / (.) 500_700 / k 700_800 æ 800_900 t 900_1000
+@End

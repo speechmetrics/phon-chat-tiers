@@ -1,0 +1,13 @@
+@UTF8
+@Begin
+@Comment:	phon-conformance: valid
+@Languages:	eng
+@Participants:	CHI Target_Child
+@ID:	eng|corpus|CHI|||||Target_Child|||
+*CHI:	au_revoir .
+%mod:	‹o ʁəvwaʁ›
+%modsyl:	o:Nʁ:Oə:Nv:Ow:Oa:Nʁ:C
+%pho:	ovwa
+%phosyl:	o:Nv:Ow:Oa:N
+%phoaln:	o↔o,ʁ↔∅,ə↔∅,v↔v,w↔w,a↔a,ʁ↔∅
+@End
