@@ -1,0 +1,33 @@
+# Phon tiers in CHAT
+
+This repository holds the specification of the four dependent tiers Phon
+writes to CHAT files — `%modsyl`, `%phosyl`, `%phoaln` and `%phoint` — and
+the example files that implementations test against.
+
+| | |
+|---|---|
+| Specification | [spec/phon-chat-tiers.md](spec/phon-chat-tiers.md) |
+| Current version | 1.0 (draft; not yet tagged) |
+| Changelog | [Appendix B of the specification](spec/phon-chat-tiers.md#appendix-b-changelog) |
+| Examples | [examples/](examples/) — one zip per version on the [releases page](../../releases) |
+| Change process | [CONTRIBUTING.md](CONTRIBUTING.md) |
+
+## Citing a version
+
+Link to the tagged file, never to `main`:
+
+    https://github.com/speechmetrics/phon-chat-tiers/blob/v1.0/spec/phon-chat-tiers.md
+
+## Who implements what
+
+- **Phon** writes these tiers, owns this specification, and ships a
+  command-line validator (`phon-chat-check`) that reports broken rules by
+  number.
+- **Chatter** validates CHAT files, including these tiers, from this
+  specification. Chatter and Phon test against the same example files; a
+  disagreement between them is a question for this specification.
+
+## Licence
+
+Not yet decided. Until a licence file is added, all rights are reserved;
+ask before redistributing.
