@@ -29,5 +29,8 @@ Link to the tagged file, never to `main`:
 
 ## Licence
 
-Not yet decided. Until a licence file is added, all rights are reserved;
-ask before redistributing.
+This repository is public. The specification and the example files may be
+read, copied, redistributed, implemented and used for conformance testing
+without asking. Keep the version number with any copy you pass on so that
+readers know which revision they hold. A formal licence file will be added
+in a later version; until then, these terms apply.
