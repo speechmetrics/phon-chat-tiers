@@ -2,6 +2,18 @@
 
 One complete, minimal CHAT file per case.
 
+Every file is written by `scripts/gen_examples.py`; never edit a `.cha` by
+hand. To add or change a case, edit the `CASES` list in that script and run
+it from the repository root:
+
+    python3 scripts/gen_examples.py
+    python3 scripts/check_examples.py
+
+The first command writes the files (and removes any `.cha` the script does
+not describe); the second checks the set against the specification. The
+"Check examples" workflow runs both on every push and fails when a
+committed file differs from what the script writes.
+
 - `valid/valid-<slug>.cha` breaks no rule.
 - `invalid/invalid-<section>-<rule>-<slug>.cha` breaks exactly the rule
   named and no other, and is otherwise valid CHAT.

@@ -8,8 +8,11 @@ change their implementations only after the change is released here.
 1. Open an issue describing the change and which rules it touches.
 2. Open a pull request that changes `spec/phon-chat-tiers.md` **and** adds
    or updates the example files under `examples/` for every rule touched.
-   A new rule takes the next free number in its section; a withdrawn rule
-   keeps its number, marked *retired*. Numbers are never reused.
+   The example files are generated: add or change a case in
+   `scripts/gen_examples.py` and run it; never edit a `.cha` by hand (see
+   `examples/README.md`). A new rule takes the next free number in its
+   section; a withdrawn rule keeps its number, marked *retired*. Numbers
+   are never reused.
 3. Add an entry to Appendix B (changelog) under the next version, and set
    `**Version:**` and `**Date:**` in the specification's header and the
    *Current version* row of `README.md` to that version. The release

@@ -4,6 +4,13 @@ Chatter 0.29.0, run on 2026-10-14 with `chatter validate --format json` on
 every file of the example set. The `Label` column is the file's
 `phon-conformance` label; `Chatter` is Chatter's status for the file.
 
+The table is a snapshot. To rerun it with another Chatter release, run
+from the repository root and replace the rows below with the output:
+
+    python3 scripts/chatter_verdicts.py <path to chatter> examples/valid/*.cha examples/invalid/*.cha
+
+Then revisit the Disagreements section, which is written by hand.
+
 | File | Label | Chatter | Codes |
 |------|-------|---------|-------|
 | valid-aln-one-sided-pause.cha | valid | invalid | E734 |
@@ -73,5 +80,5 @@ than one code. Each is one of:
 
 - Rules 3.5 (fit inside the record interval, E744) and 3.6 (group count, E746) are checked by Chatter 0.29.0, with the same 1 ms allowance as the specification: both `one-ms` valid files pass and both 2 ms files fail.
 - The 1 ms allowance of rule 3.4 agrees too: `valid-phoint-one-ms-overlap.cha` passes.
-- Chatter's messages name the tiers `%xphoaln` and `%xphoint` even when the file uses `%phoaln` and `%phoint`.
+- Chatter's messages name the tiers `%xphosyl`, `%xphoaln` and `%xphoint` (E735, E736, E738, E727, E728, E601, E743–E746) even when the file uses `%phosyl`, `%phoaln` and `%phoint`; E726 says `%phosyl`.
 - Every disagreement of kind (a) is a known difference for Phon's validator (speechmetrics/phon#702).
