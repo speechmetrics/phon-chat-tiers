@@ -45,7 +45,11 @@ def check_file(path: pathlib.Path, rules: set[str], problems: list[str]) -> str 
             problems.append(f"{rel}: name says {nm.group(1)}.{nm.group(2)}, label says {rule}")
         if rule not in rules:
             problems.append(f"{rel}: rule {rule} is not in the specification")
+    if lines[-1] != "" or (lines[-2] if len(lines) > 1 else "") != "@End":
+        problems.append(f"{rel}: must end with @End and one newline")
     has_bullet = any("\x15" in l for l in lines)
+    if any("\u2022" in l for l in lines):
+        problems.append(f"{rel}: has a U+2022 bullet character; a bullet is the byte 0x15")
     media = [l for l in lines if l.startswith("@Media:\t")]
     if has_bullet and not media:
         problems.append(f"{rel}: has bullets but no @Media")
