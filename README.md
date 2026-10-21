@@ -10,6 +10,7 @@ the example files that implementations test against.
 | Current version | 1.0 (draft; release candidate [v1.0-rc.1](https://github.com/speechmetrics/phon-chat-tiers/releases/tag/v1.0-rc.1)) |
 | Changelog | [Appendix B of the specification](spec/phon-chat-tiers.md#appendix-b-changelog) |
 | Examples | [examples/](examples/) — one zip per version on the [releases page](https://github.com/speechmetrics/phon-chat-tiers/releases) |
+| Checking a file | [VALIDATING.md](VALIDATING.md) — the `phon-chat-check` command and the `check_chat_tiers` MCP tool shipped with Phon |
 | Change process | [CONTRIBUTING.md](CONTRIBUTING.md) |
 
 ## Citing a version
@@ -20,9 +21,10 @@ Link to the tagged file, never to `main`:
 
 ## Who implements what
 
-- **Phon** writes these tiers, owns this specification, and will ship a
-  command-line validator, `phon-chat-check`, that reports broken rules by
-  number ([speechmetrics/phon#702](https://github.com/speechmetrics/phon/issues/702)).
+- **Phon** writes these tiers, owns this specification, and ships a
+  validator that reports broken rules by number, as the command
+  `phon-chat-check` and the MCP tool `check_chat_tiers` (Phon 4.2.0 and
+  later; see [VALIDATING.md](VALIDATING.md)).
 - **Chatter** validates CHAT files, including these tiers, from this
   specification. Chatter and Phon test against the same example files; a
   disagreement between them is a question for this specification.
