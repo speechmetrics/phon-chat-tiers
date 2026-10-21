@@ -12,7 +12,8 @@ it from the repository root:
 The first command writes the files (and removes any `.cha` the script does
 not describe); the second checks the set against the specification. The
 "Check examples" workflow runs both on every push and fails when a
-committed file differs from what the script writes.
+committed file differs from what the script writes. Phon's validator can
+be run over the set too; see [VALIDATING.md](../VALIDATING.md).
 
 - `valid/valid-<slug>.cha` breaks no rule.
 - `invalid/invalid-<section>-<rule>-<slug>.cha` breaks exactly the rule
