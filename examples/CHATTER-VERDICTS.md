@@ -23,6 +23,7 @@ Then revisit the Disagreements section, which is written by hand.
 | valid-phoint-one-ms-overlap.cha | valid | valid |  |
 | valid-phoint-two-words-and-pauses.cha | valid | valid |  |
 | valid-syl-cat.cha | valid | valid |  |
+| valid-syl-intonation-group.cha | valid | invalid | E316 E316 E600 |
 | valid-syl-pause-between-words.cha | valid | valid |  |
 | valid-syl-pause-inside-word.cha | valid | valid |  |
 | valid-syl-phonetic-group.cha | valid | valid |  |
@@ -66,6 +67,7 @@ than one code. Each is one of:
 | File | Chatter says | Kind | Note |
 |------|--------------|------|------|
 | valid-aln-one-sided-pause.cha | invalid, E734: main tier has 2 alignable items, `%mod` has 3 | (b) | Chatter counts the pause on `%mod` against the main line, which has no pause. Phon writes this when the main line has no pause (writer survey, point 6). Open question: https://github.com/speechmetrics/phon-chat-tiers/issues/1 |
+| valid-syl-intonation-group.cha | invalid, E316 on `%mod` and `%pho`, then E600 | (b) | Chatter's `%mod`/`%pho` grammar does not accept the intonation-group mark `\|`; it rejects `%pho: ka\|ta` on its own. Phon's parser accepts it and Appendix D lists it. Verdict from Chatter 0.30.0, added 2026-10-22 |
 | invalid-1-5-source-tier-missing.cha | valid | (a) | No check that `%phosyl` has a `%pho` (rule 1.5) |
 | invalid-1-6-pause-inside-group.cha | valid | (a) | No check for a pause inside a phonetic group on the source tier (rule 1.6) |
 | invalid-2-5-word-count.cha | invalid, E727 and E728 | — | Two codes for one defect: the alignment word count is checked once against `%mod` and once against `%pho`. Rule 2.5 counts slots, so one check |
