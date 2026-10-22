@@ -107,9 +107,11 @@ lines. Examples in this document show a bullet as `•start_end•`.
 
 **D8 — Phones of a word on `%mod` and `%pho`.** Appendix D lists every
 accepted character and gives each one a role. A word other than a pause
-token is accepted when every character in it is listed in Appendix D and
-every character finds its place by the steps below; otherwise the word is
-not accepted. Inside a phonetic group, apply the steps to each part
+token is accepted when every character in it is listed in Appendix D,
+every character finds its place by the steps below, and the word holds at
+least one base glyph (D.1); otherwise the word is not accepted. A word of
+marks or tone numbers alone has no timed element (D4) to give an interval
+on `%phoint`. Inside a phonetic group, apply the steps to each part
 between spaces on its own; the group markers `‹` and `›` take no part.
 Read the characters from left to right:
 
@@ -147,7 +149,7 @@ Examples: `ⁿdʰa̤ː²¹⁴` → phones `ⁿdʰ`, `a̤ː` and the tone unit `�
 `ᵐb`, `a`; `kʰ̵a` → `k`, `ʰ̵a`. Not accepted: `a⁶̃` (a combining
 diacritic after a tone number), `a͡ⁿb` (a prefix between a ligature and
 its base glyph), `ta..ta` (two syllable boundaries), `kæt~` (`~` is not
-listed).
+listed), `|` and `ˈ` as words of their own (no base glyph).
 
 ### Pauses
 

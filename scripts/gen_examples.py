@@ -110,6 +110,11 @@ CASES: list[Case] = [
          "%mod:\tˈɹɛkɔɹd", "%modsyl:\tˈɹ:Oɛ:Nk:Oɔ:Dɹ:Dd:C",
          "%pho:\tˈɹɛ.kɔɹd", "%phosyl:\tˈɹ:Oɛ:N.k:Oɔ:Dɹ:Dd:C",
          "%phoaln:\tˈ↔ˈ,ɹ↔ɹ,ɛ↔ɛ,∅↔.,k↔k,ɔ↔ɔ,ɹ↔ɹ,d↔d"),
+    example(False, "valid", "valid-syl-intonation-group",
+         "*CHI:\tcatta .",
+         "%mod:\tka|ta", "%modsyl:\tk:Oa:N|t:Oa:N",
+         "%pho:\tka|ta", "%phosyl:\tk:Oa:N|t:Oa:N",
+         "%phoaln:\tk↔k,a↔a,|↔|,t↔t,a↔a"),
     # ---- valid: intervals ----
     example(True, "valid", "valid-phoint-gap",
          f"*CHI:\tcat . {b(0,400)}",
