@@ -80,16 +80,16 @@ and the spaces inside a group removed. Example: `‹o ʁəvwaʁ›` → `oʁəvw
 
 **D3 — Alignment text of a word.** The comparison text (D2) of the word
 with the linking ties `‿` (U+203F) and `⁀` (U+2040) removed. Every other
-character, including `^`, stress marks, syllable boundaries and tone
-numbers, is kept. Example: `dʌz‿ɪt` → `dʌzɪt`; `‹o ʁəvwaʁ›` → `oʁəvwaʁ`.
+character, including `^`, stress marks, syllable boundaries,
+intonation-group marks and tone numbers, is kept. Example: `dʌz‿ɪt` → `dʌzɪt`; `‹o ʁəvwaʁ›` → `oʁəvwaʁ`.
 
 **D4 — Timed elements of a word.** In order, each phone and each
 intra-word pause `^` (U+005E), except that two identical adjacent
 consonants (a geminate) form one element whose text is both characters.
 A pause word has one timed element, the pause token itself. The
 untranscribed-word marker `*` is a timed element. Tone numbers, stress
-marks, syllable boundaries, compound-word markers and linking ties are
-not timed elements. Example: `bʌtt` → `b`, `ʌ`, `tt`; `bʌ^bʌ` → `b`,
+marks, syllable boundaries, compound-word markers, intonation-group marks
+(`|` U+007C, `‖` U+2016) and linking ties are not timed elements. Example: `bʌtt` → `b`, `ʌ`, `tt`; `bʌ^bʌ` → `b`,
 `ʌ`, `^`, `b`, `ʌ`.
 
 **D5 — Slots of `%mod` and `%pho`.** Walk the word lists (D1) of both
@@ -173,8 +173,9 @@ Both tiers use the same format. `%modsyl` syllabifies the model tier
     syltier ::= word (space word)*
     word    ::= pause | unit+
     unit    ::= mark | phone colon code
-    mark    ::= "^" | "ˈ" | "ˌ" | "." | "+"      /* U+005E U+02C8 U+02CC U+002E U+002B */
-    phone   ::= [^#x20#x3A#x5E#x2C8#x2CC#x2E#x2B]+ /* maximal run */
+    mark    ::= "^" | "ˈ" | "ˌ" | "." | "+" | "|" | "‖"
+                /* U+005E U+02C8 U+02CC U+002E U+002B U+007C U+2016 */
+    phone   ::= [^#x20#x3A#x5E#x2C8#x2CC#x2E#x2B#x7C#x2016]+ /* maximal run */
     code    ::= [^#x20#x3A]                      /* exactly one character */
     pause   ::= "(.)" | "(..)" | "(...)" | "(" number ")"
     number  ::= digit+ ("." digit*)? | digit+ ":" digit+ ("." digit*)?
@@ -188,8 +189,9 @@ phones. IPA length is written
 with the modifier letter `ː` (U+02D0), never an ASCII colon, so the colon
 before a code is unambiguous. A tone number such as `⁶` and a sandhi
 marker `‿` or `⁀` are units, not marks: each carries a code, always `U`. A
-`mark` — an intra-word pause, a stress mark, a syllable boundary or a
-compound-word marker — stands bare between units and carries no code. A
+`mark` — an intra-word pause, a stress mark, a syllable boundary, a
+compound-word marker or an intonation-group mark — stands bare between
+units and carries no code. A
 pause word is the pause token alone, with no code; its `number` is
 seconds, or minutes and seconds, as CHAT writes a timed pause (`(2.)`,
 `(2.5)`, `(1:3.5)`).
@@ -253,8 +255,8 @@ A tone number and a sandhi marker are units with the code `U`:
 %phosyl:	d:Oʌ:Nz:C‿:Uɪ:Nt:C
 ```
 
-An intra-word pause, a stress mark, a syllable boundary and a
-compound-word marker stand bare:
+An intra-word pause, a stress mark, a syllable boundary, a compound-word
+marker and an intonation-group mark stand bare:
 
 ```
 %pho:	bʌ^bʌ
@@ -263,6 +265,8 @@ compound-word marker stand bare:
 %phosyl:	ˈɹ:Oɛ:N.k:Oɔ:Dɹ:Dd:C
 %pho:	kæt+dɔɡ
 %phosyl:	k:Oæ:Nt:C+d:Oɔ:Nɡ:C
+%pho:	ka|ta
+%phosyl:	k:Oa:N|t:Oa:N
 ```
 
 An inter-word pause is a word of its own, and the untranscribed-word marker
@@ -292,10 +296,10 @@ and actual (`%pho`) transcriptions, one word at a time.
     space   ::= #x20
 
 A `side` is one phone from the source word, one mark (`^`, stress mark,
-syllable boundary, compound-word marker or tone number) from the source
-word, a pause token, the untranscribed-word marker `*`, or the null
-symbol `∅` (U+2205). `∅` on the
-left is epenthesis (produced, not in the model); `∅` on the right is
+syllable boundary, compound-word marker, intonation-group mark or tone
+number) from the source word, a pause token, the untranscribed-word
+marker `*`, or the null symbol `∅` (U+2205). `∅` on the left is
+epenthesis (produced, not in the model); `∅` on the right is
 deletion (in the model, not produced). Neither a linking tie nor a
 phonetic-group marker appears on either side. Pairs inside a word are
 separated by `,` (U+002C) with no surrounding space; words are separated
@@ -458,7 +462,7 @@ First versioned release. Relative to the July 2026 draft:
 - Rules split so that each states one check; numbers are permanent.
 - New rules 1.5, 2.6, 3.7 (presence of source tiers); rule 3.6 (group count) split out of the draft's section 3 rule 2.
 - Rule 2.2 now states only the `∅↔∅` check; the shape of a pair is covered by the grammar (rule 2.1).
-- Marks on the syllabification tiers enumerated: `^`, `ˈ`, `ˌ`, `.`, `+`.
+- Marks on the syllabification tiers enumerated: `^`, `ˈ`, `ˌ`, `.`, `+`, `|`, `‖`.
 - Rule 3.4 now measures each start against the previous end, with a 1 ms allowance; rule 3.5 (fit inside the record interval, 1 ms allowance) split out of it. Contiguity is not a rule.
 - Status (error / error, repairable) assigned to every rule.
 - Definitions D1 to D8 added.
