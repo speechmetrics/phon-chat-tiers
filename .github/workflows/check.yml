@@ -21,3 +21,8 @@ jobs:
           python3 scripts/gen_examples.py
           git status --porcelain -- examples
           test -z "$(git status --porcelain -- examples)"
+      - name: IPA character tables are up to date
+        run: |
+          python3 scripts/gen_ipa_table.py
+          git status --porcelain -- spec
+          test -z "$(git status --porcelain -- spec)"

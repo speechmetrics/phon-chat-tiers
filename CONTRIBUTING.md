@@ -27,6 +27,13 @@ change their implementations only after the change is released here.
    create the release by hand, since the workflow fails when one already
    exists. A final tag needs a header without `(draft)`.
 
+## IPA characters
+
+The tables of Appendix D are generated from `data/ipa-characters.tsv`.
+To add, remove or move a character, change that file and run
+`python3 scripts/gen_ipa_table.py`; never edit the tables by hand. CI
+fails when the tables and the data disagree.
+
 ## Example files
 
 See `examples/README.md` for the file format and naming.
