@@ -40,9 +40,32 @@ For example, over two files of this repository's example set:
 The rule number and title are those of the rule index (Appendix C of the
 specification), so a line can be read beside it.
 
+The fields of a line:
+
+| Field | Meaning |
+|---|---|
+| `<file>` | The file name exactly as given on the command line, not resolved to an absolute path. |
+| `<line>` | The 1-based line of the file on which the offending tier starts. A tier continued over several lines (a continuation line starts with a tab) is reported at its first line. |
+| `<rule>` | The rule number, `<section>.<rule>`, for example `3.4`. |
+| `<title>` | The rule's title in the rule index. |
+| `<message>` | What broke the rule, quoting the tier content involved. |
+
+The prefix is always `error`, whether or not the rule is repairable; the
+JSON report carries that distinction. One file can give several lines.
+They come in the order of the file's utterances and, within one
+utterance, in the order `%modsyl`, `%phosyl`, `%phoaln`, `%phoint`.
+
+The report goes to standard output, encoded as UTF-8 whatever the console
+encoding, since messages quote IPA.
+
 ### JSON report
 
-`--format json` prints one object per file:
+`--format json` prints one JSON object per file checked, in the order
+the files were named. Each object is printed compactly on one line, so
+the output of several files is JSON Lines (one object per line), not a
+JSON array. A file that breaks no rule still gets an object, with
+`status` `valid` and an empty `violations` array. Shown here indented
+for reading:
 
     {
       "file": "examples/invalid/invalid-3-4-start-before-previous-end.cha",
@@ -60,8 +83,38 @@ specification), so a line can be read beside it.
       ]
     }
 
-`status` is `valid` or `invalid`. A violation's `status` is the rule's
-status in the specification, `error` or `error, repairable`.
+The fields of the object:
+
+| Field | Type | Meaning |
+|---|---|---|
+| `file` | string | The file name as given on the command line. |
+| `status` | string | `valid` if no rule is broken, otherwise `invalid`. |
+| `spec_version` | string | The specification version the checker implements, as `--spec-version` prints it. |
+| `spec` | string | A link to the rule index of that version of the specification. |
+| `violations` | array | One object per broken rule, in the order of the text report; empty for a valid file. |
+
+The fields of a violation:
+
+| Field | Type | Meaning |
+|---|---|---|
+| `rule` | string | The rule number, as in the text report. |
+| `title` | string | The rule's title in the rule index. |
+| `status` | string | The rule's status in the specification: `error` or `error, repairable`. |
+| `line` | number | The 1-based line on which the offending tier starts. |
+| `message` | string | What broke the rule. |
+
+### Errors
+
+A file that cannot be checked gives no report, in either format.
+Instead one line goes to standard error and the other files are still
+checked:
+
+    <file>: not valid UTF-8
+    <file>: not a readable file
+    <file>: <reason>
+
+A usage error (an unknown option, a missing or wrong `--format` value,
+no file named) prints the reason and the usage text to standard error.
 
 ### Exit status
 
@@ -110,10 +163,23 @@ rule index:
     examples/invalid/invalid-3-4-start-before-previous-end.cha:10: error[3.4] Start before the previous end: %phoint start 50 is before the previous end 300
     Rule index: https://github.com/speechmetrics/phon-chat-tiers/blob/v1.0/spec/phon-chat-tiers.md#appendix-c-rule-index
 
-A file that breaks no rule answers `<file>: valid (spec 1.0, no rule
-broken)`. With `format` set to `json` the result is the command's JSON
-object. A file that cannot be read, or is not UTF-8, comes back as an
-error result.
+The verdict line counts the violations (`1 violation`, `2 violations`),
+and the rule index link closes a report with violations. A file that
+breaks no rule answers with the verdict line alone:
+
+    <file>: valid (spec 1.0, no rule broken)
+
+Here `<file>` is the `file` argument as passed, before it is resolved.
+A leading `~` in `file` stands for the user's home folder.
+
+With `format` set to `json` the result is the command's JSON object for
+the one file, indented by two spaces rather than on one line.
+
+A missing `file`, a wrong `format`, or a file that cannot be read or is
+not UTF-8 comes back as an MCP error result (`isError` set) whose text
+is a single line starting `Error:`, for example:
+
+    Error: examples/missing.cha: not a readable file
 
 When the Phon application is running with its MCP server enabled, the
 same tool is available through that server and to Schwa, Phon's built-in
