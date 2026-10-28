@@ -11,7 +11,7 @@ the example files that implementations test against.
 | Changelog | [Appendix B of the specification](spec/phon-chat-tiers.md#appendix-b-changelog) |
 | IPA characters | [Appendix D of the specification](spec/phon-chat-tiers.md#appendix-d-ipa-characters) — every character accepted on `%mod` and `%pho` |
 | Examples | [examples/](examples/) — one zip per version on the [releases page](https://github.com/speechmetrics/phon-chat-tiers/releases) |
-| Checking a file | [VALIDATING.md](VALIDATING.md) — the `phon-chat-check` command and the `check_chat_tiers` MCP tool shipped with Phon |
+| Checking a file or a folder | [VALIDATING.md](VALIDATING.md) — the `phon-chat-check` command and the `check_chat_tiers` MCP tool shipped with Phon |
 | Change process | [CONTRIBUTING.md](CONTRIBUTING.md) |
 
 ## Citing a version
