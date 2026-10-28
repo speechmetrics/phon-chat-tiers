@@ -19,7 +19,7 @@ On macOS that is `Phon.app/Contents/Resources/app/bin/phon-chat-check`;
 on Windows and Linux it is `<install dir>/bin/phon-chat-check` (with
 `.exe` on Windows). It needs no running Phon and no project.
 
-    phon-chat-check [--format text|json] [--] <file.cha>...
+    phon-chat-check [--format text|json] [--] <file.cha|folder>...
     phon-chat-check --spec-version
     phon-chat-check --help
 
@@ -103,25 +103,86 @@ The fields of a violation:
 | `line` | number | The 1-based line on which the offending tier starts. |
 | `message` | string | What broke the rule. |
 
+### Checking a folder
+
+A folder named on the command line stands for every `.cha` file below
+it, subfolders included, checked in path order. Hidden files and folders
+(names starting with `.`) are skipped, which also skips the `._*` files
+macOS leaves on shared drives. Files and folders can be mixed in one
+run. File names in the report are the folder as given followed by the
+path below it.
+
+Folder checking is new after Phon 4.2.0-beta.2; earlier builds treat a
+folder as an unreadable file.
+
+When at least one folder is named, the run reports only the files that
+break a rule (or cannot be read) and ends with one summary line on
+standard output. From the root of this repository:
+
+    $ phon-chat-check examples
+    examples/invalid/invalid-1-1-no-codes.cha:9: error[1.1] ...
+    ...
+    examples/invalid/invalid-3-8-pause-inside-group.cha:10: error[3.8] ...
+    40 files checked, 23 invalid, 23 violations
+
+The summary counts every file found (`files checked`), the files that
+break at least one rule (`invalid`) and the broken rules
+(`violations`). When a file cannot be read, `, 1 unreadable` (or the
+count) is appended. Each count is printed even when it is zero, so a
+clean folder prints only the summary:
+
+    $ phon-chat-check examples/valid
+    17 files checked, 0 invalid, 0 violations
+
+With `--format json`, a run that names a folder prints a single object
+for the whole run instead of one object per file:
+
+    {
+      "summary": {"files": 40, "invalid": 23, "violations": 23, "unreadable": 0},
+      "spec_version": "1.0",
+      "spec": "https://github.com/speechmetrics/phon-chat-tiers/blob/v1.0/spec/phon-chat-tiers.md#appendix-c-rule-index",
+      "files": [
+        {"file": "examples/invalid/invalid-1-1-no-codes.cha", "status": "invalid", ...},
+        ...
+      ]
+    }
+
+| Field | Type | Meaning |
+|---|---|---|
+| `summary` | object | The counts of the summary line: `files`, `invalid`, `violations`, `unreadable`. |
+| `spec_version` | string | As in a per-file object. |
+| `spec` | string | As in a per-file object. |
+| `files` | array | The per-file object of every file that breaks a rule or cannot be read, in path order. Files that break no rule are counted but not listed. |
+
+A file that cannot be read appears in `files` as
+`{"file": ..., "status": "unreadable", "error": ...}`, with the same
+reason the error line on standard error gives. A run that names only
+files keeps the JSON Lines output above.
+
 ### Errors
 
-A file that cannot be checked gives no report, in either format.
+A file that cannot be checked gives no lines in the text report and no
+per-file JSON object (a folder run's JSON lists it as `unreadable`).
 Instead one line goes to standard error and the other files are still
 checked:
 
     <file>: not valid UTF-8
     <file>: not a readable file
     <file>: <reason>
+    <folder>: no .cha files in this folder
 
-A usage error (an unknown option, a missing or wrong `--format` value,
-no file named) prints the reason and the usage text to standard error.
+A folder holding no `.cha` file is an error, so a mistyped path cannot
+pass as a clean result. A usage error (an unknown option, a missing or
+wrong `--format` value, no file named) prints the reason and the usage
+text to standard error.
 
 ### Exit status
 
 - `0` — no file breaks a rule.
 - `1` — at least one file breaks at least one rule.
-- `2` — a usage error, or a file that could not be read; the other files
-  named on the command line are still checked.
+- `2` — a usage error, a file that could not be read, or a folder
+  holding no `.cha` file; the other files and folders named on the
+  command line are still checked.
 
 ### Matching the specification version
 
@@ -136,6 +197,7 @@ From the root of this repository:
 
     phon-chat-check examples/valid/*.cha      # prints nothing, exits 0
     phon-chat-check examples/invalid/*.cha    # one line per file, exits 1
+    phon-chat-check examples                  # the invalid files' lines and a summary, exits 1
 
 Each invalid file's line names the rule in the file's name.
 
@@ -153,7 +215,7 @@ Then call the tool:
 
 | Parameter | Meaning |
 |---|---|
-| `file` | The CHAT file to check: an absolute path, or one relative to the directory the client started the server in. Required. |
+| `file` | The CHAT file, or a folder of CHAT files, to check: an absolute path, or one relative to the directory the client started the server in. Required. |
 | `format` | `text` (the default) or `json`. |
 
 The text result is a verdict line, the command's lines, and a link to the
@@ -175,7 +237,28 @@ A leading `~` in `file` stands for the user's home folder.
 With `format` set to `json` the result is the command's JSON object for
 the one file, indented by two spaces rather than on one line.
 
-A missing `file`, a wrong `format`, or a file that cannot be read or is
+For a folder, the result lists only the files that break a rule or
+cannot be read, between a verdict line and the command's summary line:
+
+    <folder>: invalid (spec 1.0)
+    /path/to/phon-chat-tiers/examples/invalid/invalid-1-1-no-codes.cha:9: error[1.1] ...
+    ...
+    40 files checked, 23 invalid, 23 violations
+    Rule index: https://github.com/speechmetrics/phon-chat-tiers/blob/v1.0/spec/phon-chat-tiers.md#appendix-c-rule-index
+
+The file names are absolute, since the folder is resolved before it is
+searched. A file that cannot be read gives a `<file>: <reason>` line in
+the list, and the verdict reads `not fully checked` when no file breaks
+a rule but some could not be read. A clean folder answers with the
+verdict line and the summary:
+
+    <folder>: valid (spec 1.0, no rule broken)
+    17 files checked, 0 invalid, 0 violations
+
+With `format` set to `json`, a folder's result is the command's single
+folder object, indented by two spaces.
+
+A missing `file`, a wrong `format`, a folder holding no `.cha` file, or a file that cannot be read or is
 not UTF-8 comes back as an MCP error result (`isError` set) whose text
 is a single line starting `Error:`, for example:
 
