@@ -112,8 +112,8 @@ macOS leaves on shared drives. Files and folders can be mixed in one
 run. File names in the report are the folder as given followed by the
 path below it.
 
-Folder checking is new after Phon 4.2.0-beta.2; earlier builds treat a
-folder as an unreadable file.
+Folder checking needs Phon 4.2.0-beta.3 or later; earlier builds treat
+a folder as an unreadable file.
 
 When at least one folder is named, the run reports only the files that
 break a rule (or cannot be read) and ends with one summary line on
