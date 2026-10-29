@@ -34,7 +34,6 @@ Then revisit the Disagreements section, which is written by hand.
 | invalid-1-2-unknown-code.cha | invalid 1.2 | invalid | E736 |
 | invalid-1-3-wrong-phone.cha | invalid 1.3 | invalid | E738 |
 | invalid-1-4-word-count.cha | invalid 1.4 | invalid | E726 |
-| valid-syl-tone-number.cha | invalid, E740 and E741 | (a) | Chatter keeps the tone number when it rebuilds `%phoaln` (`ma` against `ma⁶`); the specification leaves tone numbers out of the alignment, as it does stress marks and syllable boundaries, which Chatter already strips (speechmetrics/phon-chat-tiers#8) |
 | invalid-1-5-source-tier-missing.cha | invalid 1.5 | valid |  |
 | invalid-1-6-pause-inside-group.cha | invalid 1.6 | valid |  |
 | invalid-2-1-empty-side.cha | invalid 2.1 | invalid | E741 |
@@ -43,7 +42,6 @@ Then revisit the Disagreements section, which is written by hand.
 | invalid-2-3-missing-phone.cha | invalid 2.3 | invalid | E740 |
 | invalid-2-3-model-side.cha | invalid 2.3 | invalid | E740 |
 | invalid-2-4-actual-side.cha | invalid 2.4 | invalid | E741 |
-| invalid-2-1-mark-column.cha | valid | (a) | No check that a `%phoaln` side is a sound, a pause, `*` or `∅`; a mark column is accepted (rule 2.1, speechmetrics/phon-chat-tiers#8) |
 | invalid-2-5-word-count.cha | invalid 2.5 | invalid | E727 E728 |
 | invalid-2-6-source-tier-missing.cha | invalid 2.6 | valid |  |
 | invalid-2-7-pause-inside-group.cha | invalid 2.7 | valid |  |
@@ -72,7 +70,7 @@ than one code. Each is one of:
 |------|--------------|------|------|
 | valid-aln-one-sided-pause.cha | invalid, E734: main tier has 2 alignable items, `%mod` has 3 | (b) | Chatter counts the pause on `%mod` against the main line, which has no pause. Phon writes this when the main line has no pause (writer survey, point 6). Open question: https://github.com/speechmetrics/phon-chat-tiers/issues/1 |
 | valid-syl-intonation-group.cha | invalid, E316 on `%mod` and `%pho`, E600, then E316 for each unparsed source tier | (b) | Chatter's `%mod`/`%pho` grammar does not accept the intonation-group mark `\|`; it rejects `%pho: ka\|ta` on its own. Phon's parser accepts it and Appendix D lists it. Reported: https://github.com/TalkBank/chatter/issues/8 |
-| valid-syl-tone-number.cha | invalid, E740 and E741 | (a) | Chatter keeps the tone number when it rebuilds `%phoaln` (`ma` against `ma⁶`); the specification leaves tone numbers out of the alignment, as it does stress marks and syllable boundaries, which Chatter already strips (speechmetrics/phon-chat-tiers#8) |
+| valid-syl-tone-number.cha | invalid, E740 and E741 | (a) | Chatter keeps the tone number when it rebuilds `%phoaln` (`ma` against `ma⁶`); the specification leaves tone numbers out of the alignment, as it does stress marks and syllable boundaries, which Chatter already strips (speechmetrics/phon-chat-tiers#8). Chatter keeps `‖` and `+` the same way; see Notes |
 | invalid-1-5-source-tier-missing.cha | valid | (a) | No check that `%phosyl` has a `%pho` (rule 1.5) |
 | invalid-1-6-pause-inside-group.cha | valid | (a) | No check for a pause inside a phonetic group on the source tier (rule 1.6) |
 | invalid-2-1-mark-column.cha | valid | (a) | No check that a `%phoaln` side is a sound, a pause, `*` or `∅`; a mark column is accepted (rule 2.1, speechmetrics/phon-chat-tiers#8) |
@@ -90,3 +88,4 @@ than one code. Each is one of:
 - The 1 ms allowance of rule 3.4 agrees too: `valid-phoint-one-ms-overlap.cha` passes.
 - Chatter's messages name the tiers `%xphosyl`, `%xphoaln` and `%xphoint` (E735, E736, E738, E727, E728, E601, E743–E746) even when the file uses `%phosyl`, `%phoaln` and `%phoint`; E726 says `%phosyl`.
 - Every disagreement of kind (a) is a known difference for Phon's validator (speechmetrics/phon#702).
+- Outside the example set: Chatter 0.32.1 also keeps the major intonation-group mark `‖` and the compound-word marker `+` when it rebuilds `%phoaln`, so a word such as `%pho: ˈpɔ‖tɐ` or `%pho: kɑ̃+mɛm` with a mark-free alignment gets E740 or E741. The specification removes both from the alignment (D3). Found on 2026-10-29 by running Chatter on corpora exported by Phon 4.2.0-beta.4, the first release that leaves marks out of `%phoaln`; Chatter strips `ˈ`, `ˌ` and `.` and accepts those words. No example file covers `‖` or `+` yet.
