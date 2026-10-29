@@ -1,0 +1,11 @@
+@UTF8
+@Begin
+@Comment:	phon-conformance: invalid 2.3
+@Languages:	eng
+@Participants:	CHI Target_Child
+@ID:	eng|corpus|CHI|||||Target_Child|||
+*CHI:	perro .
+%mod:	ˈpero
+%pho:	ˈpero
+%phoaln:	p↔p,e↔e,∅↔r,o↔o
+@End

@@ -1,7 +1,7 @@
 # Phon Tiers in CHAT
 
 **Version:** 1.0 (draft)
-**Date:** 2026-10-21
+**Date:** 2026-10-29
 **Maintainer:** Phon (https://www.phon.ca)
 **Status:** Draft. Becomes 1.0 when tagged `v1.0`.
 
@@ -79,9 +79,13 @@ between spaces is a word.
 and the spaces inside a group removed. Example: `‹o ʁəvwaʁ›` → `oʁəvwaʁ`.
 
 **D3 — Alignment text of a word.** The comparison text (D2) of the word
-with the linking ties `‿` (U+203F) and `⁀` (U+2040) removed. Every other
-character, including `^`, stress marks, syllable boundaries,
-intonation-group marks and tone numbers, is kept. Example: `dʌz‿ɪt` → `dʌzɪt`; `‹o ʁəvwaʁ›` → `oʁəvwaʁ`.
+with every mark removed: stress marks (`ˈ`, `ˌ`), syllable boundaries
+(`.`), tone numbers (D.3), the intra-word pause `^`, the compound-word
+marker `+`, the intonation-group marks `|` and `‖`, and the linking ties
+`‿` (U+203F) and `⁀` (U+2040). What remains is the word's sounds: its
+phones (D8), and `*` for an untranscribed word. A pause word is its own
+alignment text. Examples: `dʌz‿ɪt` → `dʌzɪt`; `‹o ʁəvwaʁ›` → `oʁəvwaʁ`;
+`ˈɹɛ.kɔɹd` → `ɹɛkɔɹd`; `ma⁶` → `ma`; `bʌ^bʌ` → `bʌbʌ`; `(.)` → `(.)`.
 
 **D4 — Timed elements of a word.** In order, each phone and each
 intra-word pause `^` (U+005E), except that two identical adjacent
@@ -156,12 +160,14 @@ listed), `|` and `ˈ` as words of their own (no base glyph).
 Inter-word pauses `(.)`, `(..)`, `(...)` and `(` *number* `)` are words
 (D1) on `%mod` and `%pho` and so occupy a word slot on every dependent
 tier. An intra-word pause `^` is a character inside a word: it passes
-through bare on `%modsyl` and `%phosyl`, it is part of the alignment text
-(D3) on `%phoaln`, and it is a timed element (D4) on `%phoint`. A pause
+through bare on `%modsyl` and `%phosyl`, it is left out of the alignment
+text (D3) and takes no pair on `%phoaln`, and it is a timed element (D4)
+on `%phoint`. A pause
 token inside a phonetic group, as in `‹əda da (.)›`, is an error (rules
 1.6, 2.7 and 3.8): the dependent tiers have no defined form for such a
 word, so a validator reports the source tier and checks nothing else on
-the dependent tier for that utterance.
+the dependent tier for that utterance. Phon drops such a pause when it
+writes CHAT.
 
 ---
 
@@ -297,13 +303,13 @@ and actual (`%pho`) transcriptions, one word at a time.
     arrow   ::= #x2194
     space   ::= #x20
 
-A `side` is one phone from the source word, one mark (`^`, stress mark,
-syllable boundary, compound-word marker, intonation-group mark or tone
-number) from the source word, a pause token, the untranscribed-word
-marker `*`, or the null symbol `∅` (U+2205). `∅` on the left is
-epenthesis (produced, not in the model); `∅` on the right is
-deletion (in the model, not produced). Neither a linking tie nor a
-phonetic-group marker appears on either side. Pairs inside a word are
+A `side` is one phone (D8) from the source word, a pause token, the
+untranscribed-word marker `*`, or the null symbol `∅` (U+2205). `∅` on
+the left is epenthesis (produced, not in the model); `∅` on the right is
+deletion (in the model, not produced). An alignment pairs sounds only: no
+mark removed by D3 (stress mark, syllable boundary, tone number, `^`,
+`+`, `|`, `‖` or linking tie) and no phonetic-group marker appears on
+either side, alone or with a phone. Pairs inside a word are
 separated by `,` (U+002C) with no surrounding space; words are separated
 by single spaces.
 
@@ -311,7 +317,7 @@ by single spaces.
 
 | Rule | Status | Check |
 |------|--------|-------|
-| 2.1 | error, repairable | The tier content matches `alntier` |
+| 2.1 | error, repairable | The tier content matches `alntier`, and no side other than a pause token holds a mark removed by D3 |
 | 2.2 | error, repairable | No pair has `∅` on both sides |
 | 2.3 | error, repairable | For each alignment word that has a slot (D5), the left sides of its pairs other than `∅`, concatenated in order, equal the alignment text (D3) of the slot's `%mod` word; for a slot with no `%mod` word, every left side is `∅` |
 | 2.4 | error, repairable | For each alignment word that has a slot (D5), the right sides of its pairs other than `∅`, concatenated in order, equal the alignment text (D3) of the slot's `%pho` word; for a slot with no `%pho` word, every right side is `∅` |
@@ -354,22 +360,37 @@ rebuilds its word:
 %phoaln:	ð↔d,ə↔ə ∅↔*,*↔∅
 ```
 
-Stress marks, syllable boundaries, the intra-word pause and the
-compound-word marker have columns of their own; a linking tie has none:
+Marks take no pair. Stress marks, syllable boundaries, tone numbers, the
+intra-word pause, the compound-word marker and linking ties stay on
+`%mod` and `%pho`; the alignment pairs the sounds:
 
 ```
 %mod:	kæt+dɔɡ
 %pho:	kæt+dɔɡ
-%phoaln:	k↔k,æ↔æ,t↔t,+↔+,d↔d,ɔ↔ɔ,ɡ↔ɡ
+%phoaln:	k↔k,æ↔æ,t↔t,d↔d,ɔ↔ɔ,ɡ↔ɡ
 %mod:	ˈɹɛkɔɹd
 %pho:	ˈɹɛ.kɔɹd
-%phoaln:	ˈ↔ˈ,ɹ↔ɹ,ɛ↔ɛ,∅↔.,k↔k,ɔ↔ɔ,ɹ↔ɹ,d↔d
+%phoaln:	ɹ↔ɹ,ɛ↔ɛ,k↔k,ɔ↔ɔ,ɹ↔ɹ,d↔d
+%mod:	ˈpero
+%pho:	ˈpelo
+%phoaln:	p↔p,e↔e,r↔l,o↔o
+%mod:	ma⁶
+%pho:	ma⁶
+%phoaln:	m↔m,a↔a
 %mod:	bʌ^bʌ
 %pho:	bʌ^bʌ
-%phoaln:	b↔b,ʌ↔ʌ,^↔^,b↔b,ʌ↔ʌ
+%phoaln:	b↔b,ʌ↔ʌ,b↔b,ʌ↔ʌ
 %mod:	dʌz‿ɪt
 %pho:	dʌz‿ɪt
 %phoaln:	d↔d,ʌ↔ʌ,z↔z,ɪ↔ɪ,t↔t
+```
+
+A pair for a mark breaks rule 2.1:
+
+```
+%mod:	ˈɹɛkɔɹd
+%pho:	ˈɹɛ.kɔɹd
+%phoaln:	ˈ↔ˈ,ɹ↔ɹ,ɛ↔ɛ,∅↔.,k↔k,ɔ↔ɔ,ɹ↔ɹ,d↔d
 ```
 
 ---
@@ -470,6 +491,7 @@ First versioned release. Relative to the July 2026 draft:
 - Definitions D1 to D8 added.
 - Appendix D lists every character accepted on `%mod` and `%pho`; D8 defines how they form phones.
 - A pause token inside a phonetic group is an error: rules 1.6, 2.7 and 3.8.
+- `%phoaln` pairs sounds only (#8). D3 now removes every mark (stress marks, syllable boundaries, tone numbers, `^`, `+`, `|`, `‖`) as well as linking ties; release candidate 1 kept them. The `side` definition and rule 2.1 forbid a mark on either side, and rules 2.3 and 2.4 rebuild against the reduced alignment text. The examples with mark pairs are rewritten, and the example set gains `invalid-2-1-mark-column` and `invalid-2-3-missing-phone`.
 
 ## Appendix C: Rule index
 
@@ -488,7 +510,7 @@ The shared example set has at least one file per row.
 | 1.4 | Word count matches the source tier | error, repairable | `%pho:	kæt` with `%phosyl:	k:Oæ:Nt:C k:Oæ:Nt:C` |
 | 1.5 | Source tier present | error, repairable | `%phosyl` present, no `%pho` (and no `%phoaln` or `%phoint`) |
 | 1.6 | No pause inside a phonetic group on the source tier | error | `%pho:	‹kæ (.) t›` with `%phosyl:	k:Oæ:Nt:C` (and no `%phoaln` or `%phoint`) |
-| 2.1 | Alignment grammar | error, repairable | `%phoaln:	k↔k,æ↔` |
+| 2.1 | Alignment grammar | error, repairable | `%phoaln:	k↔k,æ↔`; or `%mod:	ˈkæt`, `%pho:	ˈkæt` with `%phoaln:	ˈ↔ˈ,k↔k,æ↔æ,t↔t` |
 | 2.2 | No null pair | error, repairable | `%phoaln:	k↔k,∅↔∅,æ↔æ,t↔t` |
 | 2.3 | Left sides rebuild the `%mod` word | error, repairable | `%mod:	kæt` with `%phoaln:	k↔k,ɛ↔æ,t↔t` |
 | 2.4 | Right sides rebuild the `%pho` word | error, repairable | `%pho:	kæt` with `%phoaln:	k↔k,æ↔ɛ,t↔t` |

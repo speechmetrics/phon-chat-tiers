@@ -123,7 +123,7 @@ standard output. From the root of this repository:
     examples/invalid/invalid-1-1-no-codes.cha:9: error[1.1] ...
     ...
     examples/invalid/invalid-3-8-pause-inside-group.cha:10: error[3.8] ...
-    40 files checked, 23 invalid, 23 violations
+    42 files checked, 25 invalid, 25 violations
 
 The summary counts every file found (`files checked`), the files that
 break at least one rule (`invalid`) and the broken rules
@@ -243,7 +243,7 @@ cannot be read, between a verdict line and the command's summary line:
     <folder>: invalid (spec 1.0)
     /path/to/phon-chat-tiers/examples/invalid/invalid-1-1-no-codes.cha:9: error[1.1] ...
     ...
-    40 files checked, 23 invalid, 23 violations
+    42 files checked, 25 invalid, 25 violations
     Rule index: https://github.com/speechmetrics/phon-chat-tiers/blob/v1.0/spec/phon-chat-tiers.md#appendix-c-rule-index
 
 The file names are absolute, since the folder is resolved before it is
