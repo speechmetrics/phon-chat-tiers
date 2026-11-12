@@ -50,11 +50,12 @@ section. Each rule has one status:
 
 Rules are evaluated per utterance and per tier in this order: first the
 presence rule (1.5, 2.6, 3.7), then the group-pause rule (1.6, 2.7, 3.8),
-then the grammar rule (1.1, 2.1, 3.1), then the others. When one of
-those three fails, the section's other rules are not evaluated for that
-tier, so a tier that lacks its source tier, whose source tier holds a
-pause inside a phonetic group, or that fails to parse breaks exactly one
-rule of its section.
+then, on `%phoaln`, the pause-position rule (2.8), then the grammar rule
+(1.1, 2.1, 3.1), then the others. When one of those fails, the section's
+other rules are not evaluated for that tier, so a tier that lacks its
+source tier, whose source tier holds a pause inside a phonetic group,
+whose source tiers hold their pauses at different positions, or that
+fails to parse breaks exactly one rule of its section.
 
 ### Versions
 
@@ -97,11 +98,10 @@ marks, syllable boundaries, compound-word markers, intonation-group marks
 `ʌ`, `^`, `b`, `ʌ`.
 
 **D5 — Slots of `%mod` and `%pho`.** Walk the word lists (D1) of both
-tiers in order. When the next word on each tier is a pause, or the next
-word on each tier is not a pause, the two words form one slot and both
-tiers advance. When one is a pause and the other is not, the pause forms a
-slot on its own and only its tier advances. When one tier has no next
-word, the next word on the other tier forms a slot on its own.
+tiers in order. While both tiers have a next word, the two words form
+one slot and both tiers advance. When one tier has no next word, the next
+word on the other tier forms a slot on its own. Rule 2.8 requires a slot
+that holds a pause on one tier to hold a pause on the other.
 
 **D6 — Record interval.** The bullet (D7) at the end of the main line.
 
@@ -168,6 +168,14 @@ token inside a phonetic group, as in `‹əda da (.)›`, is an error (rules
 word, so a validator reports the source tier and checks nothing else on
 the dependent tier for that utterance. Phon drops such a pause when it
 writes CHAT.
+
+CHAT requires an inter-word pause to appear on the main line, `%mod` and
+`%pho` alike; Chatter reports a pause on one of them alone (E734). Phon
+allows a pause on one tier of a record in its own sessions, but such a
+pause is a transcription error to be resolved by hand, and Phon reports it
+instead of writing the file. This specification checks the part that
+concerns its tiers: `%mod` and `%pho` hold their pauses at the same
+positions (rule 2.8).
 
 ---
 
@@ -324,6 +332,7 @@ by single spaces.
 | 2.5 | error, repairable | The number of alignment words equals the number of slots (D5) |
 | 2.6 | error, repairable | `%mod` and `%pho` are both present in the same utterance |
 | 2.7 | error | No phonetic group on `%mod` or `%pho` contains a pause token |
+| 2.8 | error | For each slot (D5), the `%mod` word is a pause token exactly when the `%pho` word is one; a missing word is not a pause token |
 
 ### Examples
 
@@ -339,13 +348,17 @@ deletion:
 %phoaln:	s↔∅,t↔t,ʊ↔ʊ,d↔d
 ```
 
-A pause on both tiers is one slot; a pause on one tier is a slot of its
-own, so the alignment has one word more than `%pho`:
+A pause is one slot, and pairs with itself:
 
 ```
 %mod:	kæt (.) dɔɡ
 %pho:	kæt (.) dɔɡ
 %phoaln:	k↔k,æ↔æ,t↔t (.)↔(.) d↔d,ɔ↔ɔ,ɡ↔ɡ
+```
+
+A pause on one tier only breaks rule 2.8:
+
+```
 %mod:	kæt (.) dɔɡ
 %pho:	kæt dɔɡ
 %phoaln:	k↔k,æ↔æ,t↔t (.)↔∅ d↔d,ɔ↔ɔ,ɡ↔ɡ
@@ -492,6 +505,7 @@ First versioned release. Relative to the July 2026 draft:
 - Appendix D lists every character accepted on `%mod` and `%pho`; D8 defines how they form phones.
 - A pause token inside a phonetic group is an error: rules 1.6, 2.7 and 3.8.
 - `%phoaln` pairs sounds only (#8). D3 now removes every mark (stress marks, syllable boundaries, tone numbers, `^`, `+`, `|`, `‖`) as well as linking ties; release candidate 1 kept them. The `side` definition and rule 2.1 forbid a mark on either side, and rules 2.3 and 2.4 rebuild against the reduced alignment text. The examples with mark pairs are rewritten, and the example set gains `invalid-2-1-mark-column` and `invalid-2-3-missing-phone`.
+- A pause on `%mod` or `%pho` alone is an error, as it is in CHAT (#1): new rule 2.8. D5 no longer gives such a pause a slot of its own, and `valid-aln-one-sided-pause` becomes `invalid-2-8-one-sided-pause`.
 
 ## Appendix C: Rule index
 
@@ -517,6 +531,7 @@ The shared example set has at least one file per row.
 | 2.5 | Alignment word count matches the slots | error, repairable | `%mod:	kæt dɔɡ`, `%pho:	kæt dɔɡ` (two words on every tier) with one alignment word `k↔k,æ↔æ,t↔t` |
 | 2.6 | Source tiers present | error, repairable | `%phoaln` with `%pho` and no `%mod` (and no `%modsyl`) |
 | 2.7 | No pause inside a phonetic group on `%mod` or `%pho` | error | `%pho:	‹kæ (.) t›` with `%phoaln:	k↔k,æ↔æ,t↔t` (and no `%phosyl` or `%phoint`) |
+| 2.8 | Pauses at the same positions on `%mod` and `%pho` | error | `%mod:	kæt (.)`, `%pho:	kæt` with `%phoaln:	k↔k,æ↔æ,t↔t (.)↔∅` (and no `%modsyl`, `%phosyl` or `%phoint`) |
 | 3.1 | Interval grammar | error | `%phoint:	k •0_100• æ •100_200• t` |
 | 3.2 | Token text matches the timed element | error | `%pho:	kæt` with `%phoint:	k •0_100• æ •100_200• d •200_300•` |
 | 3.3 | Start before end | error | `%phoint:	k •100_100• æ •100_200• t •200_300•` |

@@ -77,13 +77,6 @@ CASES: list[Case] = [
          "%mod:\tbʌ^bʌ", "%modsyl:\tb:Oʌ:N^b:Oʌ:N",
          "%pho:\tbʌ^bʌ", "%phosyl:\tb:Oʌ:N^b:Oʌ:N",
          "%phoaln:\tb↔b,ʌ↔ʌ,b↔b,ʌ↔ʌ"),
-    # Phon mirrors a main-line pause into both IPA tiers, so a one-sided
-    # pause arises only when the main line has no pause (survey point 6).
-    example(False, "valid", "valid-aln-one-sided-pause",
-         "*CHI:\tcat dog .",
-         "%mod:\tkæt (.) dɔɡ", "%modsyl:\tk:Oæ:Nt:C (.) d:Oɔ:Nɡ:C",
-         "%pho:\tkæt dɔɡ", "%phosyl:\tk:Oæ:Nt:C d:Oɔ:Nɡ:C",
-         "%phoaln:\tk↔k,æ↔æ,t↔t (.)↔∅ d↔d,ɔ↔ɔ,ɡ↔ɡ"),
     example(False, "valid", "valid-syl-tone-number",
          "*CHI:\tma .",
          "%mod:\tma⁶", "%modsyl:\tm:Oa:N⁶:U",
@@ -172,6 +165,11 @@ CASES: list[Case] = [
          "*CHI:\tcat .", "%pho:\tkæt", "%phoaln:\tk↔k,æ↔æ,t↔t"),
     example(False, "invalid 2.7", "invalid-2-7-pause-inside-group",
          "*CHI:\tcat .", "%mod:\tkæt", "%pho:\t‹kæ (.) t›", "%phoaln:\tk↔k,æ↔æ,t↔t"),
+    # A pause on %mod alone. CHAT rejects it as well (Chatter E734), so this
+    # is the one invalid file that is not otherwise valid CHAT (#1).
+    example(False, "invalid 2.8", "invalid-2-8-one-sided-pause",
+         "*CHI:\tcat dog .", "%mod:\tkæt (.) dɔɡ", "%pho:\tkæt dɔɡ",
+         "%phoaln:\tk↔k,æ↔æ,t↔t (.)↔∅ d↔d,ɔ↔ɔ,ɡ↔ɡ"),
     # ---- invalid: intervals (section 3) ----
     example(True, "invalid 3.1", "invalid-3-1-missing-bullet",
          f"*CHI:\tcat . {b(0,300)}", "%pho:\tkæt",

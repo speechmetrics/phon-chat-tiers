@@ -17,7 +17,9 @@ be run over the set too; see [VALIDATING.md](../VALIDATING.md).
 
 - `valid/valid-<slug>.cha` breaks no rule.
 - `invalid/invalid-<section>-<rule>-<slug>.cha` breaks exactly the rule
-  named and no other, and is otherwise valid CHAT.
+  named and no other, and is otherwise valid CHAT. The exception is
+  `invalid-2-8-one-sided-pause.cha`: CHAT also rejects a pause on `%mod`
+  or `%pho` alone.
 
 The first line after `@Begin` is the label, with a tab after the colon:
 

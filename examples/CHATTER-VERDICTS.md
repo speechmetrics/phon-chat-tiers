@@ -13,7 +13,6 @@ Then revisit the Disagreements section, which is written by hand.
 
 | File | Label | Chatter | Codes |
 |------|-------|---------|-------|
-| valid-aln-one-sided-pause.cha | valid | invalid | E734 |
 | valid-aln-stress-and-boundary.cha | valid | valid |  |
 | valid-aln-substitution-and-deletion.cha | valid | valid |  |
 | valid-phoint-cat.cha | valid | valid |  |
@@ -45,6 +44,7 @@ Then revisit the Disagreements section, which is written by hand.
 | invalid-2-5-word-count.cha | invalid 2.5 | invalid | E727 E728 |
 | invalid-2-6-source-tier-missing.cha | invalid 2.6 | valid |  |
 | invalid-2-7-pause-inside-group.cha | invalid 2.7 | valid |  |
+| invalid-2-8-one-sided-pause.cha | invalid 2.8 | invalid | E734 |
 | invalid-3-1-missing-bullet.cha | invalid 3.1 | invalid | E601 E600 E316 |
 | invalid-3-2-wrong-element.cha | invalid 3.2 | invalid | E745 |
 | invalid-3-3-empty-interval.cha | invalid 3.3 | invalid | E742 |
@@ -68,7 +68,6 @@ than one code. Each is one of:
 
 | File | Chatter says | Kind | Note |
 |------|--------------|------|------|
-| valid-aln-one-sided-pause.cha | invalid, E734: main tier has 2 alignable items, `%mod` has 3 | (b) | Chatter counts the pause on `%mod` against the main line, which has no pause. Phon writes this when the main line has no pause (writer survey, point 6). Open question: https://github.com/speechmetrics/phon-chat-tiers/issues/1 |
 | valid-syl-intonation-group.cha | invalid, E316 on `%mod` and `%pho`, E600, then E316 for each unparsed source tier | (b) | Chatter's `%mod`/`%pho` grammar does not accept the intonation-group mark `\|`; it rejects `%pho: ka\|ta` on its own. Phon's parser accepts it and Appendix D lists it. Reported: https://github.com/TalkBank/chatter/issues/8 |
 | valid-syl-tone-number.cha | invalid, E740 and E741 | (a) | Chatter keeps the tone number when it rebuilds `%phoaln` (`ma` against `ma⁶`); the specification leaves tone numbers out of the alignment, as it does stress marks and syllable boundaries, which Chatter already strips (speechmetrics/phon-chat-tiers#8). Chatter keeps `‖` and `+` the same way; see Notes |
 | invalid-1-5-source-tier-missing.cha | valid | (a) | No check that `%phosyl` has a `%pho` (rule 1.5) |
