@@ -155,10 +155,12 @@ Read the characters from left to right:
    own and ends the phone before it. No two of `.`, `ˈ` and `ˌ` stand
    next to each other.
 9. A **compound-word marker** `+` and an **intonation-group mark** `|`
-   or `‖` stand directly between two phones of the same part: a phone
-   ends directly before the mark, and a phone begins directly after it.
-   So none of them stands first or last in a word or part, forms a part
-   of its own, or stands next to another mark or a tone number.
+   or `‖` stand between two phones of the same part, with nothing
+   between the mark and either phone but stress marks (`ˈ`, `ˌ`): a
+   phone ends before the mark, and a phone begins after it. So none of
+   them stands first or last in a word or part, forms a part of its
+   own, or stands next to another of these marks, a syllable boundary
+   or a tone number. `ka‖ˈta` is accepted.
 
 Examples: `ⁿdʰa̤ː²¹⁴` → phones `ⁿdʰ`, `a̤ː` and the tone unit `²¹⁴`;
 `t͡sʰa` → `t͡sʰ`, `a`; `ʰta` → `ʰt`, `a`; `aⁿ` → `aⁿ`; `aᵐba` → `a`,
@@ -166,7 +168,7 @@ Examples: `ⁿdʰa̤ː²¹⁴` → phones `ⁿdʰ`, `a̤ː` and the tone unit `�
 diacritic after a tone number), `a͡ⁿb` (a prefix between a ligature and
 its base glyph), `ta..ta` (two syllable boundaries), `kæt~` (`~` is not
 listed), `|` and `ˈ` as words of their own (no base glyph), `ka+`, `+ka`,
-`‖ba`, `ta‖` and `ka++ta` (step 9), and `‹ta ‖ ka›` (a part with no base
+`‖ba`, `ˈ‖ba`, `ta‖` and `ka++ta` (step 9), and `‹ta ‖ ka›` (a part with no base
 glyph).
 
 ### Pauses
@@ -562,7 +564,7 @@ First versioned release. Relative to the July 2026 draft:
 - Appendix D lists every character accepted on `%mod` and `%pho`; D8 defines how they form phones.
 - A pause token inside a phonetic group is an error: rules 1.6, 2.7 and 3.8.
 - `%phoaln` pairs sounds only (#8). D3 now removes every mark (stress marks, syllable boundaries, tone numbers, `^`, `+`, `|`, `‖`) as well as linking ties; release candidate 1 kept them. The `side` definition and rule 2.1 forbid a mark on either side, and rules 2.3 and 2.4 rebuild against the reduced alignment text. The examples with mark pairs are rewritten, and the example set gains `invalid-2-1-mark-column` and `invalid-2-3-missing-phone`.
-- Answers to TalkBank's questions #13 to #17. A `%phoaln` side is exactly one phone (rule 2.1, #13). D8 requires a base glyph in every part of a phonetic group (#14), and new step 9 places `+`, `|` and `‖` directly between two phones (#15). New section 4, rule 4.1: every `%mod` and `%pho` word is accepted by D8 (#16). A minutes:seconds pause requires the dot, as in CHAT (#17).
+- Answers to TalkBank's questions #13 to #17. A `%phoaln` side is exactly one phone (rule 2.1, #13). D8 requires a base glyph in every part of a phonetic group (#14), and new step 9 places `+`, `|` and `‖` between two phones, with only stress marks allowed next to them (#15). New section 4, rule 4.1: every `%mod` and `%pho` word is accepted by D8 (#16). A minutes:seconds pause requires the dot, as in CHAT (#17).
 - A pause on `%mod` or `%pho` alone is an error, as it is in CHAT (#1): new rule 2.8. D5 no longer gives such a pause a slot of its own, and `valid-aln-one-sided-pause` becomes `invalid-2-8-one-sided-pause`.
 
 ## Appendix C: Rule index

@@ -27,6 +27,7 @@ Then revisit the Disagreements section, which is written by hand.
 | valid-syl-pause-inside-word.cha | valid | valid |  |
 | valid-syl-phonetic-group.cha | valid | valid |  |
 | valid-syl-sandhi.cha | valid | valid |  |
+| valid-syl-stress-after-mark.cha | valid | invalid | E740 E741 |
 | valid-syl-tone-number.cha | valid | invalid | E740 E741 |
 | valid-syl-untranscribed.cha | valid | valid |  |
 | invalid-1-1-no-codes.cha | invalid 1.1 | invalid | E735 |
@@ -77,6 +78,7 @@ than one code. Each is one of:
 | File | Chatter says | Kind | Note |
 |------|--------------|------|------|
 | valid-syl-intonation-group.cha | invalid, E316 on `%mod` and `%pho`, E600, then E316 for each unparsed source tier | (b) | Chatter's `%mod`/`%pho` grammar does not accept the intonation-group mark `\|`; it rejects `%pho: ka\|ta` on its own. Phon's parser accepts it and Appendix D lists it. Reported: https://github.com/TalkBank/chatter/issues/8 |
+| valid-syl-stress-after-mark.cha | invalid, E740 and E741 | (a) | Chatter keeps `‖` when it rebuilds `%phoaln` (`kata` against `ka‖ˈta`); the specification leaves marks out of the alignment (speechmetrics/phon-chat-tiers#8). The stress mark after `‖` is accepted by D8 step 9 (#15) |
 | valid-syl-tone-number.cha | invalid, E740 and E741 | (a) | Chatter keeps the tone number when it rebuilds `%phoaln` (`ma` against `ma⁶`); the specification leaves tone numbers out of the alignment, as it does stress marks and syllable boundaries, which Chatter already strips (speechmetrics/phon-chat-tiers#8). Chatter keeps `‖` and `+` the same way; see Notes |
 | invalid-1-5-source-tier-missing.cha | valid | (a) | No check that `%phosyl` has a `%pho` (rule 1.5) |
 | invalid-1-6-pause-inside-group.cha | valid | (a) | No check for a pause inside a phonetic group on the source tier (rule 1.6) |

@@ -108,6 +108,11 @@ CASES: list[Case] = [
          "%mod:\tka|ta", "%modsyl:\tk:Oa:N|t:Oa:N",
          "%pho:\tka|ta", "%phosyl:\tk:Oa:N|t:Oa:N",
          "%phoaln:\tk↔k,a↔a,t↔t,a↔a"),
+    example(False, "valid", "valid-syl-stress-after-mark",
+         "*CHI:\tcatta .",
+         "%mod:\tka‖ˈta", "%modsyl:\tk:Oa:N‖ˈt:Oa:N",
+         "%pho:\tka‖ˈta", "%phosyl:\tk:Oa:N‖ˈt:Oa:N",
+         "%phoaln:\tk↔k,a↔a,t↔t,a↔a"),
     # ---- valid: intervals ----
     example(True, "valid", "valid-phoint-gap",
          f"*CHI:\tcat . {b(0,400)}",
