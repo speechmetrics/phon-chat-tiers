@@ -1,7 +1,7 @@
 # Phon Tiers in CHAT
 
 **Version:** 1.0 (draft)
-**Date:** 2026-10-29
+**Date:** 2026-11-18
 **Maintainer:** Phon (https://www.phon.ca)
 **Status:** Draft. Becomes 1.0 when tagged `v1.0`.
 
@@ -24,7 +24,7 @@ main line, `%mod`, `%pho`, headers and bullets are defined by the CHAT
 manual and checked by Chatter. The one exception is the content of a
 `%mod` or `%pho` word: definition D8 and Appendix D state which
 characters it may hold and how they form phones, since every tier here
-is built from those phones. A file that breaks a rule here is invalid
+is built from those phones, and rule 4.1 checks it. A file that breaks a rule here is invalid
 even when Chatter's general checks pass.
 
 ### Conformance
@@ -48,7 +48,11 @@ section. Each rule has one status:
 | error | The file is invalid. No recovery is defined |
 | error, repairable | The file is invalid. A reader may recover by recomputing the tier from its source tier(s) |
 
-Rules are evaluated per utterance and per tier in this order: first the
+Rule 4.1 is evaluated first, on `%mod` and `%pho`. When it fails on a
+source tier, no rule of sections 1 to 3 is evaluated on a tier built from
+that source tier, so a word that D8 does not accept is reported once, by
+its own rule. The other rules are evaluated per utterance and per tier in
+this order: first the
 presence rule (1.5, 2.6, 3.7), then the group-pause rule (1.6, 2.7, 3.8),
 then, on `%phoaln`, the pause-position rule (2.8), then the grammar rule
 (1.1, 2.1, 3.1), then the others. When one of those fails, the section's
@@ -115,8 +119,11 @@ token is accepted when every character in it is listed in Appendix D,
 every character finds its place by the steps below, and the word holds at
 least one base glyph (D.1); otherwise the word is not accepted. A word of
 marks or tone numbers alone has no timed element (D4) to give an interval
-on `%phoint`. Inside a phonetic group, apply the steps to each part
-between spaces on its own; the group markers `‹` and `›` take no part.
+on `%phoint`. Inside a phonetic group, apply the steps and the base-glyph
+requirement to each part between spaces on its own; the group markers `‹`
+and `›` take no part. A part of marks alone, such as the `‖` in
+`‹ta ‖ ka›`, is not accepted even when another part of the group holds a
+base glyph.
 Read the characters from left to right:
 
 1. A **base glyph** (D.1) begins a new phone, unless a ligature stands
@@ -147,13 +154,22 @@ Read the characters from left to right:
    compound-word marker, sandhi, intonation group) is one unit of its
    own and ends the phone before it. No two of `.`, `ˈ` and `ˌ` stand
    next to each other.
+9. A **compound-word marker** `+` and an **intonation-group mark** `|`
+   or `‖` stand between two phones of the same part, with nothing
+   between the mark and either phone but stress marks (`ˈ`, `ˌ`): a
+   phone ends before the mark, and a phone begins after it. So none of
+   them stands first or last in a word or part, forms a part of its
+   own, or stands next to another of these marks, a syllable boundary
+   or a tone number. `ka‖ˈta` is accepted.
 
 Examples: `ⁿdʰa̤ː²¹⁴` → phones `ⁿdʰ`, `a̤ː` and the tone unit `²¹⁴`;
 `t͡sʰa` → `t͡sʰ`, `a`; `ʰta` → `ʰt`, `a`; `aⁿ` → `aⁿ`; `aᵐba` → `a`,
 `ᵐb`, `a`; `kʰ̵a` → `k`, `ʰ̵a`. Not accepted: `a⁶̃` (a combining
 diacritic after a tone number), `a͡ⁿb` (a prefix between a ligature and
 its base glyph), `ta..ta` (two syllable boundaries), `kæt~` (`~` is not
-listed), `|` and `ˈ` as words of their own (no base glyph).
+listed), `|` and `ˈ` as words of their own (no base glyph), `ka+`, `+ka`,
+`‖ba`, `ˈ‖ba`, `ta‖` and `ka++ta` (step 9), and `‹ta ‖ ka›` (a part with no base
+glyph).
 
 ### Pauses
 
@@ -194,7 +210,7 @@ Both tiers use the same format. `%modsyl` syllabifies the model tier
     phone   ::= [^#x20#x3A#x5E#x2C8#x2CC#x2E#x2B#x7C#x2016]+ /* maximal run */
     code    ::= [^#x20#x3A]                      /* exactly one character */
     pause   ::= "(.)" | "(..)" | "(...)" | "(" number ")"
-    number  ::= digit+ ("." digit*)? | digit+ ":" digit+ ("." digit*)?
+    number  ::= digit+ ("." digit*)? | digit+ ":" digit+ "." digit*
     space   ::= #x20
     colon   ::= #x3A
     digit   ::= [#x30-#x39]
@@ -210,7 +226,9 @@ compound-word marker or an intonation-group mark — stands bare between
 units and carries no code. A
 pause word is the pause token alone, with no code; its `number` is
 seconds, or minutes and seconds, as CHAT writes a timed pause (`(2.)`,
-`(2.5)`, `(1:3.5)`).
+`(2.5)`, `(1:3.5)`). Seconds alone may omit the dot (`(2)`); minutes and
+seconds may not, as in CHAT: `(1:3)` is not a pause token, and on `%mod`
+or `%pho` it is a word that D8 does not accept (rule 4.1).
 
 ### Legal constituent codes
 
@@ -311,8 +329,9 @@ and actual (`%pho`) transcriptions, one word at a time.
     arrow   ::= #x2194
     space   ::= #x20
 
-A `side` is one phone (D8) from the source word, a pause token, the
-untranscribed-word marker `*`, or the null symbol `∅` (U+2205). `∅` on
+A `side` is exactly one phone (D8) from the source word, a pause token,
+the untranscribed-word marker `*`, or the null symbol `∅` (U+2205). Two
+phones are two pairs: `ka↔ka` is not a pair, `k↔k,a↔a` is. `∅` on
 the left is epenthesis (produced, not in the model); `∅` on the right is
 deletion (in the model, not produced). An alignment pairs sounds only: no
 mark removed by D3 (stress mark, syllable boundary, tone number, `^`,
@@ -325,7 +344,7 @@ by single spaces.
 
 | Rule | Status | Check |
 |------|--------|-------|
-| 2.1 | error, repairable | The tier content matches `alntier`, and no side other than a pause token holds a mark removed by D3 |
+| 2.1 | error, repairable | The tier content matches `alntier`; no side other than a pause token holds a mark removed by D3; and every side other than a pause token, `*` and `∅` is exactly one phone by D8 |
 | 2.2 | error, repairable | No pair has `∅` on both sides |
 | 2.3 | error, repairable | For each alignment word that has a slot (D5), the left sides of its pairs other than `∅`, concatenated in order, equal the alignment text (D3) of the slot's `%mod` word; for a slot with no `%mod` word, every left side is `∅` |
 | 2.4 | error, repairable | For each alignment word that has a slot (D5), the right sides of its pairs other than `∅`, concatenated in order, equal the alignment text (D3) of the slot's `%pho` word; for a slot with no `%pho` word, every right side is `∅` |
@@ -398,12 +417,15 @@ intra-word pause, the compound-word marker and linking ties stay on
 %phoaln:	d↔d,ʌ↔ʌ,z↔z,ɪ↔ɪ,t↔t
 ```
 
-A pair for a mark breaks rule 2.1:
+A pair for a mark breaks rule 2.1, and so does a side of two phones:
 
 ```
 %mod:	ˈɹɛkɔɹd
 %pho:	ˈɹɛ.kɔɹd
 %phoaln:	ˈ↔ˈ,ɹ↔ɹ,ɛ↔ɛ,∅↔.,k↔k,ɔ↔ɔ,ɹ↔ɹ,d↔d
+%mod:	kæt
+%pho:	kæt
+%phoaln:	kæ↔kæ,t↔t
 ```
 
 ---
@@ -479,6 +501,43 @@ A geminate is one token:
 
 ---
 
+## 4. Source words — `%mod` and `%pho`
+
+Every tier of sections 1 to 3 is built from the phones of `%mod` and
+`%pho` words (D8). Rule 4.1 checks those words themselves, so that a word
+D8 does not accept is reported for what it is, and not through a
+consequence on a tier built from it, or not at all.
+
+### Rules
+
+| Rule | Status | Check |
+|------|--------|-------|
+| 4.1 | error | When the utterance holds `%modsyl`, `%phosyl`, `%phoaln` or `%phoint`, every word (D1) on `%mod` and `%pho` is a pause token or is accepted by D8. A phonetic group that holds a pause token is left to rules 1.6, 2.7 and 3.8 |
+
+The rule applies only to an utterance with one of these four tiers:
+this specification does not check `%mod` and `%pho` on their own.
+
+### Examples
+
+A character Appendix D does not list, a mark at the edge of a word, and
+a part of a phonetic group with no base glyph each break rule 4.1:
+
+```
+%pho:	kæt~
+%pho:	‖kæt
+%pho:	kæt+
+%pho:	‹kæt ‖ dɔɡ›
+```
+
+A minutes:seconds pause without the dot is not a pause token, so it
+breaks rule 4.1 too:
+
+```
+%mod:	ka (1:3) ta
+```
+
+---
+
 ## Appendix A: Legacy `%x` tier names
 
 Phon releases before 4.0 wrote these tiers as `%xmodsyl`, `%xphosyl`,
@@ -505,6 +564,7 @@ First versioned release. Relative to the July 2026 draft:
 - Appendix D lists every character accepted on `%mod` and `%pho`; D8 defines how they form phones.
 - A pause token inside a phonetic group is an error: rules 1.6, 2.7 and 3.8.
 - `%phoaln` pairs sounds only (#8). D3 now removes every mark (stress marks, syllable boundaries, tone numbers, `^`, `+`, `|`, `‖`) as well as linking ties; release candidate 1 kept them. The `side` definition and rule 2.1 forbid a mark on either side, and rules 2.3 and 2.4 rebuild against the reduced alignment text. The examples with mark pairs are rewritten, and the example set gains `invalid-2-1-mark-column` and `invalid-2-3-missing-phone`.
+- Answers to TalkBank's questions #13 to #17. A `%phoaln` side is exactly one phone (rule 2.1, #13). D8 requires a base glyph in every part of a phonetic group (#14), and new step 9 places `+`, `|` and `‖` between two phones, with only stress marks allowed next to them (#15). New section 4, rule 4.1: every `%mod` and `%pho` word is accepted by D8 (#16). A minutes:seconds pause requires the dot, as in CHAT (#17).
 - A pause on `%mod` or `%pho` alone is an error, as it is in CHAT (#1): new rule 2.8. D5 no longer gives such a pause a slot of its own, and `valid-aln-one-sided-pause` becomes `invalid-2-8-one-sided-pause`.
 
 ## Appendix C: Rule index
@@ -524,7 +584,7 @@ The shared example set has at least one file per row.
 | 1.4 | Word count matches the source tier | error, repairable | `%pho:	kæt` with `%phosyl:	k:Oæ:Nt:C k:Oæ:Nt:C` |
 | 1.5 | Source tier present | error, repairable | `%phosyl` present, no `%pho` (and no `%phoaln` or `%phoint`) |
 | 1.6 | No pause inside a phonetic group on the source tier | error | `%pho:	‹kæ (.) t›` with `%phosyl:	k:Oæ:Nt:C` (and no `%phoaln` or `%phoint`) |
-| 2.1 | Alignment grammar | error, repairable | `%phoaln:	k↔k,æ↔`; or `%mod:	ˈkæt`, `%pho:	ˈkæt` with `%phoaln:	ˈ↔ˈ,k↔k,æ↔æ,t↔t` |
+| 2.1 | Alignment grammar | error, repairable | `%phoaln:	k↔k,æ↔`; or `%mod:	ˈkæt`, `%pho:	ˈkæt` with `%phoaln:	ˈ↔ˈ,k↔k,æ↔æ,t↔t`; or `%phoaln:	kæ↔kæ,t↔t` |
 | 2.2 | No null pair | error, repairable | `%phoaln:	k↔k,∅↔∅,æ↔æ,t↔t` |
 | 2.3 | Left sides rebuild the `%mod` word | error, repairable | `%mod:	kæt` with `%phoaln:	k↔k,ɛ↔æ,t↔t` |
 | 2.4 | Right sides rebuild the `%pho` word | error, repairable | `%pho:	kæt` with `%phoaln:	k↔k,æ↔ɛ,t↔t` |
@@ -540,6 +600,7 @@ The shared example set has at least one file per row.
 | 3.6 | Group count matches `%pho` | error | `%pho:	kæt dɔɡ` (two words on every tier) with one group |
 | 3.7 | `%pho` present | error | `%phoint` present, no `%pho` (and no `%phosyl` or `%phoaln`) |
 | 3.8 | No pause inside a phonetic group on `%pho` | error | `%pho:	‹kæ (.) t›` with `%phoint:	k •0_100• æ •100_200• t •200_300•` (and no `%phosyl` or `%phoaln`) |
+| 4.1 | Source words accepted by D8 | error | `%pho:	kæt~` (or `‖kæt`, `kæt+`, `‹kæt ‖ dɔɡ›`) |
 
 ## Appendix D: IPA characters
 
@@ -562,7 +623,7 @@ Where a character may stand:
   letters `A`–`Z` stand for a class of phones.
 - **Diacritics** (D.2) attach to a phone by D8.
 - **Tone numbers** (D.3) form a tone unit (D8 step 7).
-- **Marks and separators** (D.4) stand between phones (D8 step 8). The
+- **Marks and separators** (D.4) stand between phones (D8 steps 8 and 9). The
   space separates words (D1); `‹` and `›` delimit a phonetic group.
 - **Pause tokens** (D.5): `(`, `)`, `:` and the digits stand only inside
   a pause token (D1, the `pause` production of section 1), and `.` stands
