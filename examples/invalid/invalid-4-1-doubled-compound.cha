@@ -1,0 +1,11 @@
+@UTF8
+@Begin
+@Comment:	phon-conformance: invalid 4.1
+@Languages:	eng
+@Participants:	CHI Target_Child
+@ID:	eng|corpus|CHI|||||Target_Child|||
+*CHI:	catdog .
+%mod:	kætdɔɡ
+%pho:	kæt++dɔɡ
+%phoaln:	k↔k,æ↔æ,t↔t,d↔d,ɔ↔ɔ,ɡ↔ɡ
+@End

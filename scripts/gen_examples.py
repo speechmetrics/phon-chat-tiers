@@ -150,6 +150,8 @@ CASES: list[Case] = [
          "%mod:\tˈɹɛkɔɹd", "%modsyl:\tˈɹ:Oɛ:Nk:Oɔ:Dɹ:Dd:C",
          "%pho:\tˈɹɛ.kɔɹd", "%phosyl:\tˈɹ:Oɛ:N.k:Oɔ:Dɹ:Dd:C",
          "%phoaln:\tˈ↔ˈ,ɹ↔ɹ,ɛ↔ɛ,∅↔.,k↔k,ɔ↔ɔ,ɹ↔ɹ,d↔d"),
+    example(False, "invalid 2.1", "invalid-2-1-two-phone-side",
+         "*CHI:\tcat .", "%mod:\tkæt", "%pho:\tkæt", "%phoaln:\tkæ↔kæ,t↔t"),
     example(False, "invalid 2.2", "invalid-2-2-null-pair",
          "*CHI:\tcat .", "%mod:\tkæt", "%pho:\tkæt", "%phoaln:\tk↔k,∅↔∅,æ↔æ,t↔t"),
     example(False, "invalid 2.3", "invalid-2-3-model-side",
@@ -202,6 +204,26 @@ CASES: list[Case] = [
     example(True, "invalid 3.8", "invalid-3-8-pause-inside-group",
          f"*CHI:\tcat . {b(0,300)}", "%pho:\t‹kæ (.) t›",
          f"%phoint:\tk {b(0,100)} æ {b(100,200)} t {b(200,300)}"),
+    # ---- invalid: source words (section 4) ----
+    # Each word below is refused by CHAT's own %mod/%pho grammar as well, so
+    # these files are not otherwise valid CHAT (#15, #16, #17).
+    example(False, "invalid 4.1", "invalid-4-1-unlisted-character",
+         "*CHI:\tcat .", "%mod:\tkæt", "%pho:\tkæt~", "%phoaln:\tk↔k,æ↔æ,t↔t"),
+    example(False, "invalid 4.1", "invalid-4-1-misplaced-diacritic",
+         "*CHI:\tcat .", "%mod:\tkæt", "%pho:\tkæ⁶̃t", "%phoaln:\tk↔k,æ↔æ,t↔t"),
+    example(False, "invalid 4.1", "invalid-4-1-mark-at-word-start",
+         "*CHI:\tcat .", "%mod:\tkæt", "%pho:\t‖kæt", "%phoaln:\tk↔k,æ↔æ,t↔t"),
+    example(False, "invalid 4.1", "invalid-4-1-compound-at-word-end",
+         "*CHI:\tcat .", "%mod:\tkæt", "%pho:\tkæt+", "%phoaln:\tk↔k,æ↔æ,t↔t"),
+    example(False, "invalid 4.1", "invalid-4-1-doubled-compound",
+         "*CHI:\tcatdog .", "%mod:\tkætdɔɡ", "%pho:\tkæt++dɔɡ",
+         "%phoaln:\tk↔k,æ↔æ,t↔t,d↔d,ɔ↔ɔ,ɡ↔ɡ"),
+    example(False, "invalid 4.1", "invalid-4-1-mark-part-in-group",
+         "*CHI:\tcatdog .", "%mod:\tkætdɔɡ", "%pho:\t‹kæt ‖ dɔɡ›",
+         "%phoaln:\tk↔k,æ↔æ,t↔t,d↔d,ɔ↔ɔ,ɡ↔ɡ"),
+    example(False, "invalid 4.1", "invalid-4-1-timed-pause-without-dot",
+         "*CHI:\tcat (1:3.) dog .", "%mod:\tkæt (1:3) dɔɡ", "%pho:\tkæt (1:3) dɔɡ",
+         "%phoaln:\tk↔k,æ↔æ,t↔t (1:3)↔(1:3) d↔d,ɔ↔ɔ,ɡ↔ɡ"),
 ]
 
 
