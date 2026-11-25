@@ -1,0 +1,13 @@
+@UTF8
+@Begin
+@Comment:	phon-conformance: valid
+@Languages:	eng
+@Participants:	CHI Target_Child
+@ID:	eng|corpus|CHI|||||Target_Child|||
+*CHI:	catta .
+%mod:	ka‖ˈta
+%modsyl:	k:Oa:N‖ˈt:Oa:N
+%pho:	ka‖ˈta
+%phosyl:	k:Oa:N‖ˈt:Oa:N
+%phoaln:	k↔k,a↔a,t↔t,a↔a
+@End

@@ -1,6 +1,6 @@
 # Chatter verdicts
 
-Chatter 0.32.1, run on 2026-10-29 with `chatter validate --format json` on
+Chatter 0.34.0, run on 2026-11-18 with `chatter validate --format json` on
 every file of the example set. The `Label` column is the file's
 `phon-conformance` label; `Chatter` is Chatter's status for the file.
 
@@ -27,6 +27,7 @@ Then revisit the Disagreements section, which is written by hand.
 | valid-syl-pause-inside-word.cha | valid | valid |  |
 | valid-syl-phonetic-group.cha | valid | valid |  |
 | valid-syl-sandhi.cha | valid | valid |  |
+| valid-syl-stress-after-mark.cha | valid | invalid | E740 E741 |
 | valid-syl-tone-number.cha | valid | invalid | E740 E741 |
 | valid-syl-untranscribed.cha | valid | valid |  |
 | invalid-1-1-no-codes.cha | invalid 1.1 | invalid | E735 |
@@ -37,6 +38,7 @@ Then revisit the Disagreements section, which is written by hand.
 | invalid-1-6-pause-inside-group.cha | invalid 1.6 | valid |  |
 | invalid-2-1-empty-side.cha | invalid 2.1 | invalid | E741 |
 | invalid-2-1-mark-column.cha | invalid 2.1 | valid |  |
+| invalid-2-1-two-phone-side.cha | invalid 2.1 | valid |  |
 | invalid-2-2-null-pair.cha | invalid 2.2 | invalid | E739 |
 | invalid-2-3-missing-phone.cha | invalid 2.3 | invalid | E740 |
 | invalid-2-3-model-side.cha | invalid 2.3 | invalid | E740 |
@@ -55,6 +57,13 @@ Then revisit the Disagreements section, which is written by hand.
 | invalid-3-6-group-count.cha | invalid 3.6 | invalid | E746 |
 | invalid-3-7-source-tier-missing.cha | invalid 3.7 | valid |  |
 | invalid-3-8-pause-inside-group.cha | invalid 3.8 | valid |  |
+| invalid-4-1-compound-at-word-end.cha | invalid 4.1 | invalid | E316 E600 E316 |
+| invalid-4-1-doubled-compound.cha | invalid 4.1 | invalid | E316 E600 E316 |
+| invalid-4-1-mark-at-word-start.cha | invalid 4.1 | invalid | E741 |
+| invalid-4-1-mark-part-in-group.cha | invalid 4.1 | valid |  |
+| invalid-4-1-misplaced-diacritic.cha | invalid 4.1 | invalid | E741 |
+| invalid-4-1-timed-pause-without-dot.cha | invalid 4.1 | invalid | E316 E316 E600 E316 E316 |
+| invalid-4-1-unlisted-character.cha | invalid 4.1 | invalid | E316 E600 E316 |
 
 ## Disagreements
 
@@ -69,10 +78,12 @@ than one code. Each is one of:
 | File | Chatter says | Kind | Note |
 |------|--------------|------|------|
 | valid-syl-intonation-group.cha | invalid, E316 on `%mod` and `%pho`, E600, then E316 for each unparsed source tier | (b) | Chatter's `%mod`/`%pho` grammar does not accept the intonation-group mark `\|`; it rejects `%pho: ka\|ta` on its own. Phon's parser accepts it and Appendix D lists it. Reported: https://github.com/TalkBank/chatter/issues/8 |
+| valid-syl-stress-after-mark.cha | invalid, E740 and E741 | (a) | Chatter keeps `‖` when it rebuilds `%phoaln` (`kata` against `ka‖ˈta`); the specification leaves marks out of the alignment (speechmetrics/phon-chat-tiers#8). The stress mark after `‖` is accepted by D8 step 9 (#15) |
 | valid-syl-tone-number.cha | invalid, E740 and E741 | (a) | Chatter keeps the tone number when it rebuilds `%phoaln` (`ma` against `ma⁶`); the specification leaves tone numbers out of the alignment, as it does stress marks and syllable boundaries, which Chatter already strips (speechmetrics/phon-chat-tiers#8). Chatter keeps `‖` and `+` the same way; see Notes |
 | invalid-1-5-source-tier-missing.cha | valid | (a) | No check that `%phosyl` has a `%pho` (rule 1.5) |
 | invalid-1-6-pause-inside-group.cha | valid | (a) | No check for a pause inside a phonetic group on the source tier (rule 1.6) |
 | invalid-2-1-mark-column.cha | valid | (a) | No check that a `%phoaln` side is a sound, a pause, `*` or `∅`; a mark column is accepted (rule 2.1, speechmetrics/phon-chat-tiers#8) |
+| invalid-2-1-two-phone-side.cha | valid | (a) | No check that a `%phoaln` side is one phone; `kæ↔kæ` is accepted (rule 2.1, #13). Chatter's rc.3 implementation reports it |
 | invalid-2-5-word-count.cha | invalid, E727 and E728 | — | Two codes for one defect: the alignment word count is checked once against `%mod` and once against `%pho`. Rule 2.5 counts slots, so one check |
 | invalid-2-6-source-tier-missing.cha | valid | (a) | No check that `%phoaln` has a `%mod` (rule 2.6) |
 | invalid-2-7-pause-inside-group.cha | valid | (a) | No check for a pause inside a phonetic group on `%mod` or `%pho` (rule 2.7) |
@@ -80,6 +91,13 @@ than one code. Each is one of:
 | invalid-3-4-two-ms-overlap.cha | valid | (a) | E743 checks that each start is not before the previous *start*; an interval that starts 2 ms before the previous *end* is not reported. Rule 3.4 measures against the previous end |
 | invalid-3-7-source-tier-missing.cha | valid | (a) | No check that `%phoint` has a `%pho` (rule 3.7) |
 | invalid-3-8-pause-inside-group.cha | valid | (a) | No check for a pause inside a phonetic group on `%pho` (rule 3.8) |
+| invalid-4-1-compound-at-word-end.cha | invalid, E316, E600, E316 | — | CHAT's `%pho` grammar refuses `kæt+`, so the tier is unparsed; all codes come from the one defect (rule 4.1, #15) |
+| invalid-4-1-doubled-compound.cha | invalid, E316, E600, E316 | — | As above, for `kæt++dɔɡ` |
+| invalid-4-1-mark-at-word-start.cha | invalid, E741 | (a) | Chatter parses `‖kæt` and reports the alignment (E741), a consequence; rule 4.1 reports the word (#15, #16) |
+| invalid-4-1-mark-part-in-group.cha | valid | (a) | No check that each part of a phonetic group holds a base glyph (rule 4.1, #14) |
+| invalid-4-1-misplaced-diacritic.cha | invalid, E741 | (a) | Chatter reports the alignment (E741), a consequence; rule 4.1 reports the word (#16) |
+| invalid-4-1-timed-pause-without-dot.cha | invalid, E316 twice, E600, E316 twice | — | CHAT cannot read `(1:3)` on `%mod` or `%pho`, so both tiers are unparsed; all codes come from the one defect (rule 4.1, #17) |
+| invalid-4-1-unlisted-character.cha | invalid, E316, E600, E316 | — | CHAT's `%pho` grammar refuses `~`; all codes come from the one defect (rule 4.1, #16) |
 
 ## Notes
 
@@ -87,4 +105,4 @@ than one code. Each is one of:
 - The 1 ms allowance of rule 3.4 agrees too: `valid-phoint-one-ms-overlap.cha` passes.
 - Chatter's messages name the tiers `%xphosyl`, `%xphoaln` and `%xphoint` (E735, E736, E738, E727, E728, E601, E743–E746) even when the file uses `%phosyl`, `%phoaln` and `%phoint`; E726 says `%phosyl`.
 - Every disagreement of kind (a) is a known difference for Phon's validator (speechmetrics/phon#702).
-- Outside the example set: Chatter 0.32.1 also keeps the major intonation-group mark `‖` and the compound-word marker `+` when it rebuilds `%phoaln`, so a word such as `%pho: ˈpɔ‖tɐ` or `%pho: kɑ̃+mɛm` with a mark-free alignment gets E740 or E741. The specification removes both from the alignment (D3). Found on 2026-10-29 by running Chatter on corpora exported by Phon 4.2.0-beta.4, the first release that leaves marks out of `%phoaln`; Chatter strips `ˈ`, `ˌ` and `.` and accepts those words. No example file covers `‖` or `+` yet.
+- Outside the example set: Chatter 0.32.1 also keeps the major intonation-group mark `‖` and the compound-word marker `+` when it rebuilds `%phoaln`, so a word such as `%pho: ˈpɔ‖tɐ` or `%pho: kɑ̃+mɛm` with a mark-free alignment gets E740 or E741. The specification removes both from the alignment (D3). Found on 2026-10-29 by running Chatter on corpora exported by Phon 4.2.0-beta.4, the first release that leaves marks out of `%phoaln`; Chatter strips `ˈ`, `ˌ` and `.` and accepts those words. No valid example file covers `‖` or `+` inside a word yet.
